@@ -1,0 +1,146 @@
+{
+  "@schema": "xjson://schema/micronaut.registry/v1",
+  "@status": "in-progress",
+  "@authority": "KUHUL_π",
+  "@mutation": "forbidden",
+  "@branching": "forbidden",
+
+  "structural_law": {
+    "authority": "none",
+    "execution": "forbidden",
+    "mutation": "forbidden",
+    "branching": "forbidden",
+    "enforcement": "kuhul_π_only",
+    "role": "orchestration_or_projection"
+  },
+
+  "note": "These are the THREE real micronauts currently being built. Everything in commands/*.bots.py and micronaut/services/ are TOOLS, not micronauts — they will be wired as [[micronaut.tools]] entries once the micronauts are complete.",
+
+  "micronauts": {
+    "MM-MATH": {
+      "id": "MM-MATH",
+      "name": "MathMicronaut",
+      "domain": "inference",
+      "role": "token_signal_generator",
+      "fold": "⟁COMPUTE_FOLD⟁",
+      "lane": "BATCH",
+      "model": {
+        "format": "safetensors",
+        "base": "GPT-2 medium (117M)",
+        "path": "E:\\models\\GPT2\\math-GPT",
+        "fine_tune": "math reasoning + KXML step-by-step"
+      },
+      "binds_to": "XM-1",
+      "forbidden": ["law_enforcement", "policy_definition", "memory_mutation"],
+      "tools": [
+        {
+          "name": "emit_math_token",
+          "capability": "emit_token_signal",
+          "ngram_triggers_bigrams": ["solve equation", "math problem", "calculate", "arithmetic"],
+          "ngram_triggers_trigrams": ["solve math problem", "calculate the result", "step by step math"]
+        },
+        {
+          "name": "explain_step",
+          "capability": "emit_kxml_step",
+          "ngram_triggers_bigrams": ["explain step", "show work", "step by step"],
+          "ngram_triggers_trigrams": ["explain each step", "show your work", "walk me through"]
+        },
+        {
+          "name": "chat",
+          "capability": "emit_token_signal",
+          "ngram_triggers_bigrams": ["tell me", "what is", "how does", "explain"],
+          "ngram_triggers_trigrams": [],
+          "note": "General conversational fallback — all micronauts have this"
+        }
+      ]
+    },
+
+    "MM-CODER": {
+      "id": "MM-CODER",
+      "name": "CoderMicronaut",
+      "domain": "inference",
+      "role": "token_signal_generator",
+      "fold": "⟁COMPUTE_FOLD⟁",
+      "lane": "BATCH",
+      "model": {
+        "format": "native-exe",
+        "base": "GPT-2 medium (117M) + C++ coder engine",
+        "path": "micronaut-coder\\build-cmake-targets-vs2022\\bin\\Release\\micronaut_coder.exe",
+        "fine_tune": "7M+ coding Q&A (coder_outputs dataset)"
+      },
+      "binds_to": "XM-1",
+      "forbidden": ["law_enforcement", "policy_definition", "memory_mutation"],
+      "tools": [
+        {
+          "name": "emit_code_token",
+          "capability": "emit_token_signal",
+          "ngram_triggers_bigrams": ["write code", "generate function", "implement", "code for"],
+          "ngram_triggers_trigrams": ["write a function", "generate code for", "implement this feature"]
+        },
+        {
+          "name": "explain_code",
+          "capability": "emit_token_signal",
+          "ngram_triggers_bigrams": ["explain code", "what does", "how does this"],
+          "ngram_triggers_trigrams": ["explain this code", "what does this do", "walk through code"]
+        },
+        {
+          "name": "chat",
+          "capability": "emit_token_signal",
+          "ngram_triggers_bigrams": ["tell me", "what is", "how does", "explain"],
+          "ngram_triggers_trigrams": [],
+          "note": "General conversational fallback — all micronauts have this"
+        }
+      ]
+    },
+
+    "MM-TOOLCALL": {
+      "id": "MM-TOOLCALL",
+      "name": "ToolcallMicronaut",
+      "domain": "inference",
+      "role": "token_signal_generator",
+      "fold": "⟁COMPUTE_FOLD⟁",
+      "lane": "BATCH",
+      "model": {
+        "format": "safetensors",
+        "base": "GPT-2 medium (117M)",
+        "path": "E:\\models\\GPT2\\med-GPT",
+        "fine_tune": "toolcall dispatch + geodesic ARC attention"
+      },
+      "binds_to": "XM-1",
+      "forbidden": ["law_enforcement", "policy_definition", "memory_mutation"],
+      "tools": [
+        {
+          "name": "dispatch_tool",
+          "capability": "emit_toolcall_signal",
+          "ngram_triggers_bigrams": ["call tool", "use tool", "dispatch", "invoke"],
+          "ngram_triggers_trigrams": ["call the tool", "invoke this tool", "dispatch to service"]
+        },
+        {
+          "name": "parse_schema",
+          "capability": "emit_schema_parse",
+          "ngram_triggers_bigrams": ["parse schema", "tool schema", "json schema"],
+          "ngram_triggers_trigrams": ["parse tool schema", "read json schema", "validate tool call"]
+        },
+        {
+          "name": "chat",
+          "capability": "emit_token_signal",
+          "ngram_triggers_bigrams": ["tell me", "what is", "how does", "explain"],
+          "ngram_triggers_trigrams": [],
+          "note": "General conversational fallback — all micronauts have this"
+        }
+      ]
+    }
+  },
+
+  "micronaut_stack": ["MM-MATH", "MM-CODER", "MM-TOOLCALL"],
+
+  "tools_registry": "commands/micronaut_registry.json",
+  "tools_note": "The 32 entries in commands/micronaut_registry.json and commands/*.bots.py are TOOLS — service agents that will be wired as tool capabilities of the above micronauts. They are not micronauts.",
+
+  "enforcement": "KUHUL_π",
+  "mutation": "none",
+  "branching": "impossible",
+  "architecture": "in-progress",
+
+  "final_law": "Micronauts decide where, when, and how intelligence is framed. KUHUL π alone decides whether it is allowed to exist. Extrapolation may continue forever — execution may not."
+}

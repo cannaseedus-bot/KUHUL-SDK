@@ -55,6 +55,19 @@ npm run test:python  # python/tests/connector_tests.py
 
 Splash server requires a one-time admin step: `.\add-kuhul-host.ps1` (adds `kuhul.local` to hosts).
 
+## Micronauts vs Tools — Critical Distinction
+
+**Real micronauts** (`micronaut/micronaut.registry.xjson`) — three, currently being built:
+- `MM-MATH` — MathMicronaut, GPT-2 fine-tuned on math, at `E:\models\GPT2\math-GPT`
+- `MM-CODER` — CoderMicronaut, native C++ engine (`micronaut-coder/`), GPT-2 coder fine-tune
+- `MM-TOOLCALL` — ToolcallMicronaut, GPT-2 medium fine-tuned on toolcall + geodesic ARC attention
+
+All three are `MM-1` variants (token_signal_generator, `⟁COMPUTE_FOLD⟁`) from the S7-LLM canonical system. All three can chat.
+
+**Tools** — everything in `commands/*.bots.py`, `commands/micronaut_registry.json`, and `micronaut/services/` are tools (service agents), not micronauts. They will be wired as `[[micronaut.tools]]` entries once the micronauts are complete. Do not call them micronauts.
+
+**Fold registry**: `micronaut/folds.toml` — canonical 15-fold system from S7-LLM. Authoritative. Mutation forbidden.
+
 ## Port Map
 
 | Service | Port |

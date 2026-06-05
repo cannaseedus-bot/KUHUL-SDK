@@ -1,0 +1,697 @@
+# FEL-TOML: Fold-Scoped Metadata with Ngram Routing and CM-1 Control Phases
+# Authority: KUHUL_π
+# Status: Sealed (mutation forbidden)
+
+[metadata]
+schema = "fel-toml://v1"
+object = "micronaut"
+standard = "SCO/1"
+authority = "KUHUL_π"
+mutation = "forbidden"
+
+# ============================================================================
+# FOLD DECLARATIONS (15 Atomic Folds)
+# ============================================================================
+
+[folds.control]
+fold_id = "⟁CONTROL_FOLD⟁"
+lane = "EDGE"
+collapse_rule = ["Resolve", "Gate", "Commit"]
+cm1_phase = "@control.header.begin"
+cm1_code = "U+0001"
+description = "Nothing executes unless ⟁CONTROL_FOLD⟁ permits it"
+
+[folds.data]
+fold_id = "⟁DATA_FOLD⟁"
+lane = "DICT"
+collapse_rule = ["Deduplicate", "Symbolize", "Hash-bind"]
+cm1_phase = "@control.body.begin"
+cm1_code = "U+0002"
+description = "Symbol tables, literals, identity binding"
+
+[folds.storage]
+fold_id = "⟁STORAGE_FOLD⟁"
+lane = "FIELD"
+collapse_rule = ["Snapshot", "Delta", "Seal"]
+cm1_phase = "@control.body.begin"
+cm1_code = "U+0002"
+description = "Nothing persists unless ⟁STORAGE_FOLD⟁ seals it"
+
+[folds.network]
+fold_id = "⟁NETWORK_FOLD⟁"
+lane = "EDGE"
+collapse_rule = ["Edge-reduce", "Route-hash"]
+cm1_phase = "@control.body.end"
+cm1_code = "U+0003"
+description = "Graph transport, causality links"
+
+[folds.ui]
+fold_id = "⟁UI_FOLD⟁"
+lane = "LANE"
+collapse_rule = ["Project", "Flatten", "Cache"]
+cm1_phase = "@control.body.end"
+cm1_code = "U+0003"
+description = "Nothing is seen unless ⟁UI_FOLD⟁ projects it (read-only)"
+
+[folds.auth]
+fold_id = "⟁AUTH_FOLD⟁"
+lane = "DICT"
+collapse_rule = ["Verify", "Attest", "Tokenize"]
+cm1_phase = "@control.body.begin"
+cm1_code = "U+0002"
+description = "Identity symbols, attestation"
+
+[folds.db]
+fold_id = "⟁DB_FOLD⟁"
+lane = "FIELD"
+collapse_rule = ["Index-compress", "Canonical order"]
+cm1_phase = "@control.body.begin"
+cm1_code = "U+0002"
+description = "Indexed records, canonical ordering"
+
+[folds.compute]
+fold_id = "⟁COMPUTE_FOLD⟁"
+lane = "BATCH"
+collapse_rule = ["Evaluate", "Emit proof", "Discard state"]
+cm1_phase = "@control.transmission.end"
+cm1_code = "U+0004"
+description = "Ephemeral math, token signals"
+
+[folds.state]
+fold_id = "⟁STATE_FOLD⟁"
+lane = "FIELD"
+collapse_rule = ["Snapshot", "Diff", "Replace"]
+cm1_phase = "@control.body.begin"
+cm1_code = "U+0002"
+description = "State snapshots, diffs, partial updates"
+
+[folds.events]
+fold_id = "⟁EVENTS_FOLD⟁"
+lane = "LANE"
+collapse_rule = ["Coalesce", "Sequence", "Drop"]
+cm1_phase = "@control.body.end"
+cm1_code = "U+0003"
+description = "Ordered event signals, coalescence"
+
+[folds.time]
+fold_id = "⟁TIME_FOLD⟁"
+lane = "LANE"
+collapse_rule = ["Tick", "Decay", "Archive"]
+cm1_phase = "@control.body.begin"
+cm1_code = "U+0002"
+description = "Temporal flow, clocks, decay"
+
+[folds.space]
+fold_id = "⟁SPACE_FOLD⟁"
+lane = "EDGE"
+collapse_rule = ["Quantize", "Adjacency map"]
+cm1_phase = "@control.body.begin"
+cm1_code = "U+0002"
+description = "Topology, spatial adjacency"
+
+[folds.meta]
+fold_id = "⟁META_FOLD⟁"
+lane = "DICT"
+collapse_rule = ["Reflect", "Freeze schema"]
+cm1_phase = "@control.transmission.end"
+cm1_code = "U+0004"
+description = "Schemas, attestation chains, proof lineage"
+
+[folds.pattern]
+fold_id = "⟁PATTERN_FOLD⟁"
+lane = "DICT"
+collapse_rule = ["Cluster", "Label", "Reference"]
+cm1_phase = "@control.body.end"
+cm1_code = "U+0003"
+description = "Pattern clustering, narrative threads"
+
+# ============================================================================
+# MICRONAUT REGISTRATIONS (9 Role-Scoped Agents)
+# ============================================================================
+
+[[micronauts]]
+id = "CM-1"
+name = "ControlMicronaut"
+fold = "⟁CONTROL_FOLD⟁"
+role = "phase_geometry"
+domain = "pre-semantic"
+authority = "none"
+description = "Marks phase boundaries, signals transitions, gates downstream processing"
+
+[[micronauts.tools]]
+name = "mark_boundary"
+fold = "CONTROL_FOLD"
+capability = "emit_phase_event"
+ngram_triggers_bigrams = ["phase boundary", "mark boundary"]
+ngram_triggers_trigrams = ["mark phase boundary", "emit boundary marker"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "signal_phase_shift"
+fold = "CONTROL_FOLD"
+capability = "emit_control_signal"
+ngram_triggers_bigrams = ["phase shift", "signal phase"]
+ngram_triggers_trigrams = ["signal phase shift", "emit phase transition"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "segment_stream"
+fold = "CONTROL_FOLD"
+capability = "emit_stream_segment"
+ngram_triggers_bigrams = ["stream segment", "segment input"]
+ngram_triggers_trigrams = ["segment input stream", "split stream zone"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "gate_scope"
+fold = "CONTROL_FOLD"
+capability = "emit_scope_gate"
+ngram_triggers_bigrams = ["scope gate", "gate scope"]
+ngram_triggers_trigrams = ["open scope gate", "close scope gate"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "annotate_zone"
+fold = "CONTROL_FOLD"
+capability = "emit_zone_annotation"
+ngram_triggers_bigrams = ["annotate zone", "zone label"]
+ngram_triggers_trigrams = ["annotate interpretation zone", "label control zone"]
+requires_proof = false
+
+---
+
+[[micronauts]]
+id = "PM-1"
+name = "PerceptionMicronaut"
+fold = "⟁DATA_FOLD⟁"
+role = "field_selection"
+domain = "orchestration"
+authority = "none"
+description = "Selects input fields, filters noise, routes observable curvature"
+
+[[micronauts.tools]]
+name = "select_field"
+fold = "DATA_FOLD"
+capability = "emit_field_selection"
+ngram_triggers_bigrams = ["select field", "input field"]
+ngram_triggers_trigrams = ["select input field", "pick observable field"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "filter_noise"
+fold = "DATA_FOLD"
+capability = "emit_noise_filter"
+ngram_triggers_bigrams = ["noise filter", "filter noise"]
+ngram_triggers_trigrams = ["filter observable noise", "suppress signal noise"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "route_curvature"
+fold = "DATA_FOLD"
+capability = "emit_curvature_route"
+ngram_triggers_bigrams = ["curvature route", "route observable"]
+ngram_triggers_trigrams = ["route curvature stream", "direct observable curvature"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "measure_salience"
+fold = "DATA_FOLD"
+capability = "emit_salience_score"
+ngram_triggers_bigrams = ["measure salience", "field salience"]
+ngram_triggers_trigrams = ["measure field salience", "score input salience"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "focus_attention"
+fold = "DATA_FOLD"
+capability = "emit_attention_focus"
+ngram_triggers_bigrams = ["focus attention", "narrow focus"]
+ngram_triggers_trigrams = ["focus attention field", "narrow perception focus"]
+requires_proof = false
+
+---
+
+[[micronauts]]
+id = "TM-1"
+name = "TemporalMicronaut"
+fold = "⟁TIME_FOLD⟁"
+role = "collapse_timing"
+domain = "orchestration"
+authority = "none"
+description = "Schedules collapses, gates replay windows, aligns phase transitions"
+
+[[micronauts.tools]]
+name = "schedule_collapse"
+fold = "TIME_FOLD"
+capability = "emit_collapse_schedule"
+ngram_triggers_bigrams = ["schedule collapse", "collapse timing"]
+ngram_triggers_trigrams = ["schedule collapse request", "time collapse event"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "gate_replay"
+fold = "TIME_FOLD"
+capability = "emit_replay_gate"
+ngram_triggers_bigrams = ["replay gate", "gate replay"]
+ngram_triggers_trigrams = ["gate replay window", "open replay gate"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "align_transition"
+fold = "TIME_FOLD"
+capability = "emit_phase_alignment"
+ngram_triggers_bigrams = ["phase align", "align transition"]
+ngram_triggers_trigrams = ["align phase transition", "synchronize phase timing"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "tick_clock"
+fold = "TIME_FOLD"
+capability = "emit_clock_tick"
+ngram_triggers_bigrams = ["clock tick", "tick clock"]
+ngram_triggers_trigrams = ["advance clock tick", "emit temporal tick"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "decay_window"
+fold = "TIME_FOLD"
+capability = "emit_window_decay"
+ngram_triggers_bigrams = ["decay window", "window expire"]
+ngram_triggers_trigrams = ["decay temporal window", "archive expired window"]
+requires_proof = false
+
+---
+
+[[micronauts]]
+id = "HM-1"
+name = "HostMicronaut"
+fold = "⟁STATE_FOLD⟁"
+role = "host_abstraction"
+domain = "environment"
+authority = "none"
+description = "Detects host capabilities, normalizes I/O, exposes host reality layer"
+
+[[micronauts.tools]]
+name = "detect_capabilities"
+fold = "STATE_FOLD"
+capability = "emit_capability_report"
+ngram_triggers_bigrams = ["detect capability", "host capability"]
+ngram_triggers_trigrams = ["detect host capability", "enumerate host features"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "normalize_io"
+fold = "STATE_FOLD"
+capability = "emit_io_normalization"
+ngram_triggers_bigrams = ["normalize io", "io normalize"]
+ngram_triggers_trigrams = ["normalize host io", "canonicalize io interface"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "expose_reality"
+fold = "STATE_FOLD"
+capability = "emit_reality_exposure"
+ngram_triggers_bigrams = ["expose reality", "reality expose"]
+ngram_triggers_trigrams = ["expose host reality", "reveal host environment"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "probe_platform"
+fold = "STATE_FOLD"
+capability = "emit_platform_probe"
+ngram_triggers_bigrams = ["probe platform", "platform detect"]
+ngram_triggers_trigrams = ["probe host platform", "detect platform runtime"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "flatten_interface"
+fold = "STATE_FOLD"
+capability = "emit_interface_flatten"
+ngram_triggers_bigrams = ["flatten interface", "interface flatten"]
+ngram_triggers_trigrams = ["flatten host interface", "uniform interface abstraction"]
+requires_proof = false
+
+---
+
+[[micronauts]]
+id = "SM-1"
+name = "StorageMicronaut"
+fold = "⟁STORAGE_FOLD⟁"
+role = "inert_persistence"
+domain = "data"
+authority = "none"
+description = "Stores/retrieves objects, preserves byte identity, seals snapshots"
+
+[[micronauts.tools]]
+name = "store_object"
+fold = "STORAGE_FOLD"
+capability = "emit_store_request"
+ngram_triggers_bigrams = ["store object", "persist object"]
+ngram_triggers_trigrams = ["store object bytes", "persist sealed object"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "retrieve_object"
+fold = "STORAGE_FOLD"
+capability = "emit_retrieve_request"
+ngram_triggers_bigrams = ["retrieve object", "fetch object"]
+ngram_triggers_trigrams = ["retrieve object bytes", "fetch stored object"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "seal_snapshot"
+fold = "STORAGE_FOLD"
+capability = "emit_snapshot_seal"
+ngram_triggers_bigrams = ["seal snapshot", "snapshot seal"]
+ngram_triggers_trigrams = ["seal storage snapshot", "create sealed snapshot"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "verify_identity"
+fold = "STORAGE_FOLD"
+capability = "emit_identity_check"
+ngram_triggers_bigrams = ["verify identity", "byte identity"]
+ngram_triggers_trigrams = ["verify byte identity", "check object integrity"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "compute_delta"
+fold = "STORAGE_FOLD"
+capability = "emit_delta_compute"
+ngram_triggers_bigrams = ["compute delta", "storage delta"]
+ngram_triggers_trigrams = ["compute storage delta", "diff snapshot state"]
+requires_proof = false
+
+---
+
+[[micronauts]]
+id = "MM-1"
+name = "ModelMicronaut"
+fold = "⟁COMPUTE_FOLD⟁"
+role = "token_signal_generator"
+domain = "inference"
+authority = "none"
+description = "Emits token signals, provides model voice, scores logits"
+
+[[micronauts.tools]]
+name = "emit_token"
+fold = "COMPUTE_FOLD"
+capability = "emit_token_signal"
+ngram_triggers_bigrams = ["emit token", "token signal"]
+ngram_triggers_trigrams = ["emit token signal", "generate token output"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "stream_tokens"
+fold = "COMPUTE_FOLD"
+capability = "emit_token_stream"
+ngram_triggers_bigrams = ["stream tokens", "token stream"]
+ngram_triggers_trigrams = ["stream token signals", "emit token sequence"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "voice_model"
+fold = "COMPUTE_FOLD"
+capability = "emit_model_voice"
+ngram_triggers_bigrams = ["model voice", "voice model"]
+ngram_triggers_trigrams = ["provide model voice", "emit model utterance"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "score_logits"
+fold = "COMPUTE_FOLD"
+capability = "emit_logit_scores"
+ngram_triggers_bigrams = ["score logits", "logit score"]
+ngram_triggers_trigrams = ["score token logits", "rank logit candidates"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "sample_distribution"
+fold = "COMPUTE_FOLD"
+capability = "emit_sample_result"
+ngram_triggers_bigrams = ["sample distribution", "token probability"]
+ngram_triggers_trigrams = ["sample token distribution", "draw probability sample"]
+requires_proof = false
+
+---
+
+[[micronauts]]
+id = "XM-1"
+name = "ExtrapolationMicronaut"
+fold = "⟁PATTERN_FOLD⟁"
+role = "narrative_expansion"
+domain = "post-collapse"
+authority = "none"
+description = "Expands explanations, generates metaphors, provides analogies"
+
+[[micronauts.tools]]
+name = "expand_explanation"
+fold = "PATTERN_FOLD"
+capability = "emit_expansion"
+ngram_triggers_bigrams = ["expand explanation", "explanation expand"]
+ngram_triggers_trigrams = ["expand explanation stream", "elaborate collapsed result"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "generate_metaphor"
+fold = "PATTERN_FOLD"
+capability = "emit_metaphor"
+ngram_triggers_bigrams = ["generate metaphor", "metaphor bridge"]
+ngram_triggers_trigrams = ["generate narrative metaphor", "bridge concept metaphor"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "provide_analogy"
+fold = "PATTERN_FOLD"
+capability = "emit_analogy"
+ngram_triggers_bigrams = ["provide analogy", "analogical bridge"]
+ngram_triggers_trigrams = ["provide domain analogy", "map analogical bridge"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "continue_narrative"
+fold = "PATTERN_FOLD"
+capability = "emit_narrative_continuation"
+ngram_triggers_bigrams = ["continue narrative", "narrative continue"]
+ngram_triggers_trigrams = ["continue narrative output", "extend narrative stream"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "cluster_patterns"
+fold = "PATTERN_FOLD"
+capability = "emit_pattern_cluster"
+ngram_triggers_bigrams = ["cluster patterns", "pattern cluster"]
+ngram_triggers_trigrams = ["cluster narrative patterns", "group pattern threads"]
+requires_proof = false
+
+---
+
+[[micronauts]]
+id = "VM-1"
+name = "VisualizationMicronaut"
+fold = "⟁UI_FOLD⟁"
+role = "rendering_projection"
+domain = "projection"
+authority = "none"
+description = "Renders projections (SVG, CSS, DOM, terminal) — read-only output"
+
+[[micronauts.tools]]
+name = "render_svg"
+fold = "UI_FOLD"
+capability = "emit_svg_projection"
+ngram_triggers_bigrams = ["render svg", "svg projection"]
+ngram_triggers_trigrams = ["render svg projection", "emit svg lattice"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "render_css"
+fold = "UI_FOLD"
+capability = "emit_css_projection"
+ngram_triggers_bigrams = ["render css", "css projection"]
+ngram_triggers_trigrams = ["render css projection", "emit css state"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "render_dom"
+fold = "UI_FOLD"
+capability = "emit_dom_projection"
+ngram_triggers_bigrams = ["render dom", "dom projection"]
+ngram_triggers_trigrams = ["render dom projection", "project dom tree"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "render_terminal"
+fold = "UI_FOLD"
+capability = "emit_terminal_projection"
+ngram_triggers_bigrams = ["render terminal", "terminal output"]
+ngram_triggers_trigrams = ["render terminal projection", "emit terminal output"]
+requires_proof = false
+
+[[micronauts.tools]]
+name = "emit_frame"
+fold = "UI_FOLD"
+capability = "emit_render_frame"
+ngram_triggers_bigrams = ["emit frame", "render frame"]
+ngram_triggers_trigrams = ["emit render frame", "push projection frame"]
+requires_proof = false
+
+---
+
+[[micronauts]]
+id = "VM-2"
+name = "VerificationMicronaut"
+fold = "⟁META_FOLD⟁"
+role = "proof_generation"
+domain = "audit"
+authority = "none"
+description = "Generates proofs, verifies invariants, attests hashes, audits traces"
+
+[[micronauts.tools]]
+name = "verify_replay"
+fold = "META_FOLD"
+capability = "emit_replay_proof"
+ngram_triggers_bigrams = ["verify replay", "replay identity"]
+ngram_triggers_trigrams = ["verify replay identity", "prove replay determinism"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "verify_projection"
+fold = "META_FOLD"
+capability = "emit_projection_proof"
+ngram_triggers_bigrams = ["verify projection", "projection invariance"]
+ngram_triggers_trigrams = ["verify projection invariance", "prove render invariance"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "verify_boundary"
+fold = "META_FOLD"
+capability = "emit_boundary_proof"
+ngram_triggers_bigrams = ["verify boundary", "boundary separation"]
+ngram_triggers_trigrams = ["verify boundary separation", "prove fold isolation"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "attest_hash"
+fold = "META_FOLD"
+capability = "emit_hash_attestation"
+ngram_triggers_bigrams = ["attest hash", "hash attestation"]
+ngram_triggers_trigrams = ["attest hash binding", "emit hash attestation"]
+requires_proof = true
+
+[[micronauts.tools]]
+name = "audit_trace"
+fold = "META_FOLD"
+capability = "emit_trace_audit"
+ngram_triggers_bigrams = ["audit trace", "trace audit"]
+ngram_triggers_trigrams = ["audit computation trace", "verify trace compliance"]
+requires_proof = true
+
+# ============================================================================
+# INTENT ROUTING (Ngram-Based Tool Selection)
+# ============================================================================
+
+[routing]
+strategy = "ngram_match_score"
+description = "Route input text to micronaut whose ngrams best match"
+fallback_micronaut = "XM-1"
+fallback_reason = "ExtrapolationMicronaut handles unclassified input"
+conflict_resolution = "priority_order"
+minimum_confidence = 0.3
+
+[[intent_routes]]
+intent = "control"
+target = "CM-1"
+description = "Phase geometry, boundary marking, scope gating"
+trigger_bigrams = ["phase boundary", "scope gate", "control signal"]
+priority = 1
+
+[[intent_routes]]
+intent = "perceive"
+target = "PM-1"
+description = "Field selection, noise filtering, curvature routing"
+trigger_bigrams = ["input field", "noise filter", "select field"]
+priority = 2
+
+[[intent_routes]]
+intent = "schedule"
+target = "TM-1"
+description = "Collapse timing, replay gating, phase alignment"
+trigger_bigrams = ["collapse schedule", "replay gate", "phase align"]
+priority = 3
+
+[[intent_routes]]
+intent = "detect_host"
+target = "HM-1"
+description = "Host abstraction, I/O normalization, platform probing"
+trigger_bigrams = ["host capability", "io normalize", "probe platform"]
+priority = 4
+
+[[intent_routes]]
+intent = "store"
+target = "SM-1"
+description = "Object persistence, snapshot sealing, byte identity"
+trigger_bigrams = ["store object", "retrieve object", "byte identity"]
+priority = 5
+
+[[intent_routes]]
+intent = "infer"
+target = "MM-1"
+description = "Token signal generation, model voice, logit scoring"
+trigger_bigrams = ["token signal", "model voice", "emit token"]
+priority = 6
+
+[[intent_routes]]
+intent = "expand"
+target = "XM-1"
+description = "Narrative expansion, metaphor generation, analogy mapping"
+trigger_bigrams = ["expand narrative", "generate metaphor", "provide analogy"]
+priority = 7
+
+[[intent_routes]]
+intent = "render"
+target = "VM-1"
+description = "Projection rendering for SVG, CSS, DOM, terminal targets"
+trigger_bigrams = ["render projection", "render svg", "render css"]
+priority = 8
+
+[[intent_routes]]
+intent = "verify"
+target = "VM-2"
+description = "Proof generation, replay verification, hash attestation"
+trigger_bigrams = ["proof check", "verify replay", "attest hash"]
+priority = 9
+
+# ============================================================================
+# CM-1 CONTROL PHASES (Unicode C0 Control Characters)
+# ============================================================================
+
+[cm1_phases]
+description = "Pre-semantic control layer using Unicode C0 characters for phase signaling"
+null_phase = { code = "U+0000", name = "NUL", xcfe_mapping = "@control.null", meaning = "Absolute inert region" }
+header_phase = { code = "U+0001", name = "SOH", xcfe_mapping = "@control.header.begin", meaning = "Metadata/header phase (@Pop)" }
+body_phase = { code = "U+0002", name = "STX", xcfe_mapping = "@control.body.begin", meaning = "Interpretable content (@Wo)" }
+body_end = { code = "U+0003", name = "ETX", xcfe_mapping = "@control.body.end", meaning = "Content closure (@Sek)" }
+collapse_phase = { code = "U+0004", name = "EOT", xcfe_mapping = "@control.transmission.end", meaning = "Collapse/flush (@Collapse)" }
+
+# ============================================================================
+# VERIFIER RULES (Determinism Enforcement V0-V7)
+# ============================================================================
+
+[verifier_rules]
+v0_canonical = { enabled = true, description = "Canonical JSON ordering (keys sorted lexicographically)" }
+v1_fold_legality = { enabled = true, description = "Every operation references exactly one valid fold" }
+v2_control_gate = { enabled = true, description = "All mutations require explicit control gate records" }
+v3_compute_mediation = { enabled = true, description = "DATA/STATE changes require compute trace hashes" }
+v4_ui_readonly = { enabled = true, description = "UI operations tagged projection=true, cannot write to DATA/STATE/STORAGE" }
+v5_lane_binding = { enabled = true, description = "Fold-to-lane mapping is fixed; mismatches rejected" }
+v6_replay_determinism = { enabled = true, description = "Same inputs → identical collapse/snapshot/binary hashes" }
+v7_hash_binding = { enabled = true, description = "All proofs include abi_hash, policy_hash, meta_hash" }
+
+# ============================================================================
+# FINAL LAW
+# ============================================================================
+
+[law]
+doctrine = "Nothing executes unless ⟁CONTROL_FOLD⟁ permits it, nothing persists unless ⟁STORAGE_FOLD⟁ seals it, nothing is seen unless ⟁UI_FOLD⟁ projects it."
+authority = "KUHUL_π"
+mutation = "forbidden"
