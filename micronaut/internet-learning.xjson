@@ -1,0 +1,88 @@
+{
+  "@schema": "xjson://schema/asx-prime-os-internet-learning/v1",
+  "@status": "in-progress",
+  "@authority": "KUHUL_π",
+  "@mutation": "forbidden",
+  "@version": "4.0",
+
+  "name": "ASX-PRIME-OS-INTERNET-LEARNING",
+  "description": "Browser OS with Autonomous Internet Data Harvesting and AI Training",
+
+  "kernel_processes": {
+    "data_harvester": {
+      "script":     "micronaut/data-harvester.mjs",
+      "port":       25109,
+      "type":       "autonomous_url_loader",
+      "fold":       "⟁COMPUTE_FOLD⟁",
+      "lane":       "BATCH",
+      "capabilities": ["api_calls", "rss_parsing", "rate_limited_fetch"],
+      "rate_policy": "1_req_per_domain_per_second",
+      "cycle_interval_ms": 300000
+    },
+    "learning_engine": {
+      "script":     "micronaut/learning-engine.mjs",
+      "port":       25110,
+      "type":       "continuous_training_pipeline",
+      "fold":       "⟁COMPUTE_FOLD⟁",
+      "lane":       "BATCH",
+      "trainer":    "releases/v3.5.0-WebX/tools/trainers/internet_harvester.py",
+      "triggers":   ["new_data_available", "boot_complete", "idle_cycles"],
+      "model_update": "hot_swap"
+    }
+  },
+
+  "data_sources": {
+    "priority_coder": [
+      { "id": "github",        "url": "https://api.github.com/",                   "note": "code repos" },
+      { "id": "stackoverflow", "url": "https://api.stackexchange.com/",             "note": "coding Q&A" },
+      { "id": "arxiv_cs",      "url": "https://export.arxiv.org/",                  "note": "CS papers" },
+      { "id": "huggingface",   "url": "https://huggingface.co/api/",               "note": "AI models/datasets" }
+    ],
+    "knowledge_bases": [
+      { "id": "wikipedia",     "url": "https://en.wikipedia.org/api/",              "note": "general knowledge" },
+      { "id": "openlibrary",   "url": "https://openlibrary.org/",                  "note": "books" },
+      { "id": "nasa",          "url": "https://api.nasa.gov/",                      "note": "science data" },
+      { "id": "census",        "url": "https://api.census.gov/",                   "note": "demographic data" }
+    ],
+    "real_time_feeds": [
+      { "id": "hackernews",    "url": "https://hacker-news.firebaseio.com/v0/",    "note": "tech news" },
+      { "id": "lobsters",      "url": "https://lobste.rs/",                        "note": "tech discussions" }
+    ]
+  },
+
+  "file_system_mounts": [
+    { "path": "/harvested_data", "type": "readwrite", "source": "data/harvested/",        "note": "JSONL batches" },
+    { "path": "/ai_memory",      "type": "readwrite", "source": "data/ai_memory/",        "note": "SCX-compressed chats" },
+    { "path": "/model_checkpts", "type": "readwrite", "source": "E:\\models\\GPT2\\",     "note": "hot-swap targets" }
+  ],
+
+  "kuhul_ops": {
+    "harvest_knowledge":   "⟁Pop⟁harvest_knowledge — K'ayab' over sources, Sek fetch, Wo store, Xul",
+    "train_on_new_data":   "⟁Pop⟁train_on_new_data — Yax queue, Sek decompress_batch, Sek update_ai_model, Sek hot_swap_active, Xul",
+    "continuous_learning": "⟁Pop⟁continuous_learning — K'ayab' learning_cycle, check_internet, harvest if online, Kumk'u, Xul"
+  },
+
+  "boot_sequence_additions": [
+    "check_internet_connection",
+    "data_harvester.initialize",
+    "learning_engine.start",
+    "start_background_harvesting",
+    "begin_autonomous_training"
+  ],
+
+  "connection_awareness": {
+    "online":  { "harvesting": "active",  "model_updates": "real_time" },
+    "offline": { "harvesting": "paused",  "model_updates": "local_optimization_only" }
+  },
+
+  "performance_targets": {
+    "data_processing_ms_per_mb": 100,
+    "training_min_per_batch":    1,
+    "storage_tokens_per_gb":     "1B"
+  },
+
+  "micronaut_binding": "MM-CODER",
+  "fold":              "⟁COMPUTE_FOLD⟁",
+  "enforcement":       "KUHUL_π",
+  "final_law":         "Harvest only public data. Rate-limit every domain. KUHUL_π decides whether harvested knowledge may execute."
+}
