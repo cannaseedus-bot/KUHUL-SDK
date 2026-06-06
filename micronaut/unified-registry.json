@@ -1,0 +1,3259 @@
+{
+  "schema": "micronaut-unified-registry-v1",
+  "metadata": {
+    "version": "1.4.0",
+    "generated": "2026-06-05T00:00:00Z",
+    "description": "Unified service registry — 93 services (14 infrastructure + 32 micronauts + 47 integrated skills)",
+    "total_services": 93,
+    "infrastructure_count": 14,
+    "micronauts_count": 32,
+    "integrated_skills_count": 47,
+    "phase": "H complete, Phase I in progress",
+    "status": "production_operational"
+  },
+  "infrastructure": {
+    "coordinator": {
+      "id": "coordinator",
+      "name": "Coordinator (CO-1)",
+      "port": 25100,
+      "role": "routing",
+      "description": "Main service coordinator and router",
+      "type": "router",
+      "status": "core",
+      "endpoints": [
+        "GET  /health    — coordinator + all service statuses",
+        "GET  /registry  — full unified registry",
+        "GET  /services  — list all services",
+        "POST /register  — register new service",
+        "POST /route     — route request to service"
+      ],
+      "startup_order": 1
+    },
+    "data_harvester": {
+      "id": "data-harvester",
+      "name": "Data Harvester",
+      "port": 25120,
+      "role": "internet_learning",
+      "description": "Autonomous URL loader — fetches GitHub, StackOverflow, arXiv, HuggingFace, Wikipedia for MM-CODER training",
+      "type": "kernel_process",
+      "fold": "⟁COMPUTE_FOLD⟁",
+      "script": "micronaut/data-harvester.mjs",
+      "status": "active",
+      "endpoints": [
+        "GET  /health   — liveness check",
+        "GET  /status   — running, cycles, errors, cache_size",
+        "POST /harvest  — trigger immediate cycle (202 async)",
+        "POST /stop     — halt harvest loop"
+      ],
+      "startup_order": 20
+    },
+    "learning_engine": {
+      "id": "learning-engine",
+      "name": "Learning Engine",
+      "port": 25121,
+      "role": "internet_learning",
+      "description": "Continuous training pipeline — spawns internet_harvester.py, hot-swaps MM-CODER model checkpoint",
+      "type": "kernel_process",
+      "fold": "⟁COMPUTE_FOLD⟁",
+      "script": "micronaut/learning-engine.mjs",
+      "trainer": "releases/v3.5.0-WebX/tools/trainers/internet_harvester.py",
+      "status": "active",
+      "endpoints": [
+        "GET  /health  — liveness check",
+        "GET  /status  — active, cycles, last_model, log_tail",
+        "POST /train   — start training { batch_dir, model_out } (202 async)"
+      ],
+      "startup_order": 21
+    }
+  },
+  "services": [
+    {
+      "id": "factory",
+      "name": "Factory (FG-1)",
+      "port": 3176,
+      "role": "creation",
+      "type": "micronaut",
+      "domain": "factory",
+      "description": "Service factory and creation engine",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /infer"
+      ],
+      "startup_order": 2
+    },
+    {
+      "id": "responder",
+      "name": "Responder (RP-1)",
+      "port": 25103,
+      "role": "response",
+      "type": "formatter",
+      "domain": "response",
+      "description": "Response formatting and routing",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /infer"
+      ],
+      "startup_order": 2
+    },
+    {
+      "id": "executor",
+      "name": "Executor (EX-1)",
+      "port": 25104,
+      "role": "execution",
+      "type": "executor",
+      "domain": "execution",
+      "description": "Task execution engine",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /infer"
+      ],
+      "startup_order": 3
+    },
+    {
+      "id": "manager",
+      "name": "Manager (MG-1)",
+      "port": 25105,
+      "role": "lifecycle",
+      "type": "manager",
+      "domain": "lifecycle",
+      "description": "Lifecycle management and health monitoring",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /infer"
+      ],
+      "startup_order": 2
+    },
+    {
+      "id": "verb-router",
+      "name": "Verb Router (VR-1)",
+      "port": 25106,
+      "role": "http-verbs",
+      "type": "router",
+      "domain": "verbs",
+      "description": "HTTP verb routing — GET (expand), POST/PUT/DELETE (accept) with SCXQ7 sigils",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "GET /api/users",
+        "GET /api/users/{{id}}",
+        "POST /api/users",
+        "PUT /api/users/{{id}}",
+        "DELETE /api/users/{{id}}"
+      ],
+      "capabilities": [
+        "http_verb_routing",
+        "scxq7_sigil_mapping",
+        "form_processing",
+        "rest_crud"
+      ],
+      "verb_mappings": {
+        "GET": "@extract",
+        "POST": "@insert",
+        "PUT": "@update",
+        "DELETE": "@delete"
+      },
+      "startup_order": 2
+    },
+    {
+      "id": "planner",
+      "name": "Planner (PL-1)",
+      "port": 25109,
+      "role": "planning",
+      "type": "agent",
+      "domain": "planning",
+      "description": "Planning and orchestration agent",
+      "status": "stable",
+      "dependencies": [
+        "coordinator",
+        "factory",
+        "executor",
+        "responder"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /infer",
+        "POST /plan",
+        "POST /breakdown"
+      ],
+      "capabilities": [
+        "planning",
+        "task_breakdown",
+        "orchestration"
+      ],
+      "startup_order": 3
+    },
+    {
+      "id": "skills-router",
+      "name": "Skills Router (SK-1)",
+      "port": 25107,
+      "role": "skills",
+      "type": "router",
+      "domain": "skills",
+      "description": "Unified skills routing — loads skill manifests and routes invocations",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "GET /skills",
+        "POST /invoke"
+      ],
+      "capabilities": [
+        "skill_routing",
+        "manifest_loading"
+      ],
+      "startup_order": 2
+    },
+    {
+      "id": "web-research",
+      "name": "Web Research Bot (WR-1)",
+      "port": 25108,
+      "role": "research",
+      "type": "agent",
+      "domain": "research",
+      "description": "DDG + Brave scraper — builds bigram/trigram/coarse-grams, persists to grams.jsonl, XQL query, GGUF grounding",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET  /health",
+        "POST /research  — scrape + build + save grams",
+        "POST /ask       — grounded GGUF answer",
+        "GET  /grams     — query saved grams",
+        "POST /xquery    — XQL over gram store",
+        "GET  /sources   — scraped sources"
+      ],
+      "capabilities": [
+        "web_scraping",
+        "ngram_extraction",
+        "xql_query",
+        "gguf_inference"
+      ],
+      "startup_order": 3
+    },
+    {
+      "id": "session-memory",
+      "name": "Session Memory (SM-1)",
+      "port": 25101,
+      "role": "memory",
+      "type": "store",
+      "domain": "memory",
+      "description": "Session persistence — chat history, plans, state per session",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /session",
+        "GET /session/:id"
+      ],
+      "startup_order": 2
+    },
+    {
+      "id": "pm1-plan",
+      "name": "Plan Service (PM-1)",
+      "port": 25102,
+      "role": "plans",
+      "type": "store",
+      "domain": "plans",
+      "description": "Plan persistence and retrieval",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /plan",
+        "GET /plans",
+        "GET /plan/:id"
+      ],
+      "startup_order": 2
+    },
+    {
+      "id": "gguf-server",
+      "name": "GGUF Bridge (GB-1)",
+      "port": 5000,
+      "role": "inference",
+      "type": "agent",
+      "domain": "inference",
+      "description": "Ollama proxy on :5000 — exposes /v1/chat/completions, routes to best local model",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "GET /v1/models",
+        "POST /v1/chat/completions"
+      ],
+      "startup_order": 2
+    },
+    {
+      "id": "splash-server",
+      "name": "Splash Cache Server (SS-1)",
+      "port": 25200,
+      "role": "static",
+      "type": "static",
+      "domain": "splash",
+      "description": "Static file server + cross-folder cache via /file?path=",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /",
+        "GET /health",
+        "GET /file?path=",
+        "GET /cache-status",
+        "POST /cache-warm"
+      ],
+      "startup_order": 3
+    },
+    {
+      "id": "windows-powershell",
+      "name": "PowerShell Executor (PSISE-1)",
+      "port": 3189,
+      "role": "execution",
+      "type": "executor",
+      "domain": "shell",
+      "description": "PowerShell/ISE script execution and environment management",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /execute",
+        "POST /invoke"
+      ],
+      "startup_order": 2
+    },
+    {
+      "id": "micronaut-skill",
+      "name": "K'UHUL Dependency Injection (KX-1)",
+      "port": 3175,
+      "role": "di",
+      "type": "framework",
+      "domain": "di",
+      "description": "K'UHUL DI container and micronaut initialization",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /inject",
+        "POST /init"
+      ],
+      "startup_order": 2
+    },
+    {
+      "id": "sk-coordinator-service",
+      "name": "Semantic Kernel Coordinator (CL-1)",
+      "port": 3171,
+      "role": "orchestration",
+      "type": "agent",
+      "domain": "orchestration",
+      "description": "Semantic Kernel multi-call orchestration and learning",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /learn",
+        "POST /orchestrate"
+      ],
+      "startup_order": 2
+    },
+    {
+      "id": "team-lead-service",
+      "name": "Team Lead Agent (CL-1)",
+      "port": 3171,
+      "role": "team",
+      "type": "agent",
+      "domain": "team",
+      "description": "Team coordination and task assignment",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /assign",
+        "POST /dispatch"
+      ],
+      "startup_order": 3
+    },
+    {
+      "id": "workflow-orchestrator-service",
+      "name": "Workflow Orchestrator (PM-1)",
+      "port": 8000,
+      "role": "workflow",
+      "type": "agent",
+      "domain": "workflow",
+      "description": "Workflow planning and project automation",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /plan",
+        "POST /automate"
+      ],
+      "startup_order": 3
+    },
+    {
+      "id": "vs-native-tools",
+      "name": "Visual Studio Native Tools (PSISE-1)",
+      "port": 3189,
+      "role": "build",
+      "type": "build",
+      "domain": "build",
+      "description": "Visual Studio x64/x86 native compilation environment",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /x64",
+        "POST /x86"
+      ],
+      "startup_order": 2
+    },
+    {
+      "id": "vs2022-tools",
+      "name": "Visual Studio 2022 Tools (PSISE-1)",
+      "port": 3189,
+      "role": "build",
+      "type": "build",
+      "domain": "build",
+      "description": "Visual Studio 2022 Community development shell and build tools",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /devshell"
+      ],
+      "startup_order": 2
+    },
+    {
+      "id": "windows-sdk-service",
+      "name": "Windows SDK Validator (D3D-1)",
+      "port": 3183,
+      "role": "sdk",
+      "type": "validator",
+      "domain": "sdk",
+      "description": "Windows SDK headers, CMake integration, and DirectX validation",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /header",
+        "POST /cmake"
+      ],
+      "startup_order": 2
+    },
+    {
+      "id": "powershell-ise-service",
+      "name": "PowerShell ISE Environment (PSISE-1)",
+      "port": 3189,
+      "role": "shell",
+      "type": "editor",
+      "domain": "shell",
+      "description": "PowerShell Integrated Scripting Environment with layout and catalog",
+      "status": "stable",
+      "dependencies": [
+        "coordinator"
+      ],
+      "endpoints": [
+        "GET /health",
+        "POST /layout",
+        "POST /catalog"
+      ],
+      "startup_order": 2
+    },
+    {
+      "description": "Text-to-image generation",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25111,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "vision"
+      ],
+      "domain": "vision",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Image Generation Skill",
+      "id": "imagegen-skill"
+    },
+    {
+      "description": "Plugin generation",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25112,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "development"
+      ],
+      "domain": "development",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Plugin Creator Skill",
+      "id": "plugin-creator"
+    },
+    {
+      "description": "Multi-agent orchestration",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25113,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "orchestration"
+      ],
+      "domain": "orchestration",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Agentic Micronaut Skill",
+      "id": "agentic-micronaut"
+    },
+    {
+      "description": "Team assignment",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25114,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "management"
+      ],
+      "domain": "management",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Team Lead Skill",
+      "id": "team-lead-skill"
+    },
+    {
+      "description": "Project scaffolding",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25115,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "development"
+      ],
+      "domain": "development",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Project Factory Skill",
+      "id": "project-factory"
+    },
+    {
+      "description": "CF deployment",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25116,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "deployment"
+      ],
+      "domain": "deployment",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Cloudflare Deploy Skill",
+      "id": "cloudflare-deploy"
+    },
+    {
+      "description": "Agent creation",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25117,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "orchestration"
+      ],
+      "domain": "orchestration",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Agent Factory Skill",
+      "id": "agent-factory"
+    },
+    {
+      "description": "Build orchestration",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25118,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "build"
+      ],
+      "domain": "build",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Builder Skill",
+      "id": "builder"
+    },
+    {
+      "description": "Multi-model routing",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25119,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "inference"
+      ],
+      "domain": "inference",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Model Router Skill",
+      "id": "model-router-skill"
+    },
+    {
+      "description": "K'UHUL semantic planning",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25120,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "planning"
+      ],
+      "domain": "planning",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Semantic Planner Skill",
+      "id": "semantic-planner"
+    },
+    {
+      "description": "Shader compilation",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25121,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "gpu"
+      ],
+      "domain": "gpu",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "GPU Shader Skill",
+      "id": "shader-skill"
+    },
+    {
+      "description": "Code generation",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25122,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "development"
+      ],
+      "domain": "development",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Code Generation Skill",
+      "id": "code-skill"
+    },
+    {
+      "description": "Workflow orchestration",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25123,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "automation"
+      ],
+      "domain": "automation",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Workflow Automation Skill",
+      "id": "workflow-skill"
+    },
+    {
+      "description": "Doc generation",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25124,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "documentation"
+      ],
+      "domain": "documentation",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Documentation Skill",
+      "id": "doc-skill"
+    },
+    {
+      "description": "Test generation",
+      "startup_order": 3,
+      "status": "stable",
+      "port": 25125,
+      "dependencies": [
+        "coordinator"
+      ],
+      "capabilities": [
+        "testing"
+      ],
+      "domain": "testing",
+      "endpoints": [
+        "GET /health",
+        "POST /invoke"
+      ],
+      "type": "skill",
+      "role": "skill",
+      "name": "Test Automation Skill",
+      "id": "test-skill"
+    },
+    {
+      "name": "PM-1 Planning & orchestration",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 8000,
+      "domain": "planning",
+      "id": "pm1",
+      "startup_order": 2,
+      "description": "Planning & orchestration",
+      "role": "planning",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "BR-1 Brain router",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3172,
+      "domain": "routing",
+      "id": "br1",
+      "startup_order": 2,
+      "description": "Brain router",
+      "role": "routing",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "VM-1 Vector memory",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3173,
+      "domain": "vector",
+      "id": "vm1",
+      "startup_order": 2,
+      "description": "Vector memory",
+      "role": "vector",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "OV-1 Observer",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3174,
+      "domain": "observation",
+      "id": "ov1",
+      "startup_order": 2,
+      "description": "Observer",
+      "role": "observer",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "KX-1 K'UHUL DI container",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3175,
+      "domain": "di",
+      "id": "kx1",
+      "startup_order": 2,
+      "description": "K'UHUL DI container",
+      "role": "di",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "FG-1 Factory",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3176,
+      "domain": "factory",
+      "id": "fg1",
+      "startup_order": 2,
+      "description": "Factory",
+      "role": "factory",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "DX-1 Debugger",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3177,
+      "domain": "debugging",
+      "id": "dx1",
+      "startup_order": 2,
+      "description": "Debugger",
+      "role": "debugger",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "ST-1 Storage",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3167,
+      "domain": "storage",
+      "id": "st1",
+      "startup_order": 2,
+      "description": "Storage",
+      "role": "storage",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "CH-1 Chat engine",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3168,
+      "domain": "chat",
+      "id": "ch1",
+      "startup_order": 2,
+      "description": "Chat engine",
+      "role": "chat",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "MM-1 Memory manager",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3169,
+      "domain": "memory",
+      "id": "mm1",
+      "startup_order": 2,
+      "description": "Memory manager",
+      "role": "memory",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "PK-1 Package manager",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3170,
+      "domain": "package",
+      "id": "pk1",
+      "startup_order": 2,
+      "description": "Package manager",
+      "role": "package",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "CL-1 Cluster manager",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3171,
+      "domain": "cluster",
+      "id": "cl1",
+      "startup_order": 2,
+      "description": "Cluster manager",
+      "role": "cluster",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "CM-1 Command executor",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3178,
+      "domain": "command",
+      "id": "cm1",
+      "startup_order": 2,
+      "description": "Command executor",
+      "role": "command",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "IM-1 Image processor",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3179,
+      "domain": "image",
+      "id": "im1",
+      "startup_order": 2,
+      "description": "Image processor",
+      "role": "image",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "OC-1 .NET Bridge",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3180,
+      "domain": "orchestration",
+      "id": "oc1",
+      "startup_order": 2,
+      "description": ".NET Bridge",
+      "role": "orchestration",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "SW-2 Swarm coordinator",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3181,
+      "domain": "swarm",
+      "id": "sw2",
+      "startup_order": 2,
+      "description": "Swarm coordinator",
+      "role": "swarm",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "BATCH-1 Batch processor",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3182,
+      "domain": "batch",
+      "id": "batch1",
+      "startup_order": 2,
+      "description": "Batch processor",
+      "role": "batch",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "D3D-1 DirectX validator",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3183,
+      "domain": "gpu",
+      "id": "d3d1",
+      "startup_order": 2,
+      "description": "DirectX validator",
+      "role": "gpu",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "DQ-1 Distributed queue",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3184,
+      "domain": "queue",
+      "id": "dq1",
+      "startup_order": 2,
+      "description": "Distributed queue",
+      "role": "queue",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "FM-1 File manager",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3185,
+      "domain": "file",
+      "id": "fm1",
+      "startup_order": 2,
+      "description": "File manager",
+      "role": "file",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "GO-1 SCXQ2 interpreter",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3186,
+      "domain": "scxq2",
+      "id": "go1",
+      "startup_order": 2,
+      "description": "SCXQ2 interpreter",
+      "role": "scxq2",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "GP-1 GPU manager",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3187,
+      "domain": "gpu-mgmt",
+      "id": "gp1",
+      "startup_order": 2,
+      "description": "GPU manager",
+      "role": "gpu-mgmt",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "MX-1 Mixin system",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3188,
+      "domain": "mixin",
+      "id": "mx1",
+      "startup_order": 2,
+      "description": "Mixin system",
+      "role": "mixin",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "PSISE-1 PowerShell ISE",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3189,
+      "domain": "shell",
+      "id": "psise1",
+      "startup_order": 2,
+      "description": "PowerShell ISE",
+      "role": "shell",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "PYIDE-1 Python IDE",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3190,
+      "domain": "python",
+      "id": "pyide1",
+      "startup_order": 2,
+      "description": "Python IDE",
+      "role": "python",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "SHELL-1 PowerShell Bridge",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3191,
+      "domain": "shell-bridge",
+      "id": "shell1",
+      "startup_order": 2,
+      "description": "PowerShell Bridge",
+      "role": "shell-bridge",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "VT-1 VT device handler",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3192,
+      "domain": "vt",
+      "id": "vt1",
+      "startup_order": 2,
+      "description": "VT device handler",
+      "role": "vt",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "WB-1 Web server",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3193,
+      "domain": "webserver",
+      "id": "wb1",
+      "startup_order": 2,
+      "description": "Web server",
+      "role": "webserver",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "TR-1 Training orchestrator",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3194,
+      "domain": "training",
+      "id": "tr1",
+      "startup_order": 2,
+      "description": "Training orchestrator",
+      "role": "training",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "name": "DC-1 Data core",
+      "status": "active",
+      "type": "micronaut",
+      "dependencies": [
+        "coordinator"
+      ],
+      "port": 3195,
+      "domain": "datacore",
+      "id": "dc1",
+      "startup_order": 2,
+      "description": "Data core",
+      "role": "datacore",
+      "endpoints": [
+        "GET /health",
+        "POST /dispatch"
+      ]
+    },
+    {
+      "id": "dotnet-openai",
+      "name": "OpenAI (ChatGPT / GPT-4)",
+      "type": "connector",
+      "domain": "ai-provider",
+      "port": 3180,
+      "service": "connector",
+      "target": "openai",
+      "description": "OpenAI API integration (GPT-4, GPT-3.5-turbo, embeddings)",
+      "capabilities": [
+        "chat",
+        "embeddings",
+        "image-generation"
+      ],
+      "models": [
+        "gpt-4",
+        "gpt-3.5-turbo"
+      ],
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "dotnet-azure",
+      "name": "Azure OpenAI",
+      "type": "connector",
+      "domain": "ai-provider",
+      "port": 3180,
+      "service": "connector",
+      "target": "azure",
+      "description": "Enterprise OpenAI via Azure",
+      "capabilities": [
+        "chat",
+        "embeddings"
+      ],
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "dotnet-anthropic",
+      "name": "Anthropic (Claude)",
+      "type": "connector",
+      "domain": "ai-provider",
+      "port": 3180,
+      "service": "connector",
+      "target": "anthropic",
+      "description": "Claude API integration",
+      "models": [
+        "claude-3",
+        "claude-2"
+      ],
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "dotnet-google",
+      "name": "Google Vertex AI",
+      "type": "connector",
+      "domain": "ai-provider",
+      "port": 3180,
+      "service": "connector",
+      "target": "google",
+      "description": "Google Vertex AI and PaLM APIs",
+      "capabilities": [
+        "chat",
+        "embeddings"
+      ],
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "dotnet-ollama",
+      "name": "Ollama (Local Models)",
+      "type": "connector",
+      "domain": "ai-provider",
+      "port": 3180,
+      "service": "connector",
+      "target": "ollama",
+      "description": "Local Ollama model inference",
+      "capabilities": [
+        "chat",
+        "embeddings"
+      ],
+      "config": {
+        "host": "localhost",
+        "port": 11434
+      },
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "dotnet-cohere",
+      "name": "Cohere API",
+      "type": "connector",
+      "domain": "ai-provider",
+      "port": 3180,
+      "service": "connector",
+      "target": "cohere",
+      "description": "Cohere language models",
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "dotnet-huggingface",
+      "name": "Hugging Face",
+      "type": "connector",
+      "domain": "ai-provider",
+      "port": 3180,
+      "service": "connector",
+      "target": "huggingface",
+      "description": "Hugging Face inference API",
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "dotnet-bedrock",
+      "name": "AWS Bedrock",
+      "type": "connector",
+      "domain": "ai-provider",
+      "port": 3180,
+      "service": "connector",
+      "target": "bedrock",
+      "description": "AWS Bedrock LLM services",
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "dotnet-mistral",
+      "name": "Mistral AI",
+      "type": "connector",
+      "domain": "ai-provider",
+      "port": 3180,
+      "service": "connector",
+      "target": "mistral",
+      "description": "Mistral AI API",
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "dotnet-milvus",
+      "name": "Milvus Vector Database",
+      "type": "vector-store",
+      "domain": "vector-database",
+      "port": 3180,
+      "service": "vector-db",
+      "target": "milvus",
+      "description": "Enterprise open-source vector database",
+      "capabilities": [
+        "semantic-search",
+        "hybrid-search"
+      ],
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "dotnet-weaviate",
+      "name": "Weaviate Vector Database",
+      "type": "vector-store",
+      "domain": "vector-database",
+      "port": 3180,
+      "service": "vector-db",
+      "target": "weaviate",
+      "description": "GraphQL-based vector database",
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "dotnet-qdrant",
+      "name": "Qdrant Vector Database",
+      "type": "vector-store",
+      "domain": "vector-database",
+      "port": 3180,
+      "service": "vector-db",
+      "target": "qdrant",
+      "description": "High-performance Rust vector database",
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "dotnet-pinecone",
+      "name": "Pinecone Vector Database",
+      "type": "vector-store",
+      "domain": "vector-database",
+      "port": 3180,
+      "service": "vector-db",
+      "target": "pinecone",
+      "description": "Cloud-native vector database",
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "dotnet-azure-search",
+      "name": "Azure AI Search",
+      "type": "vector-store",
+      "domain": "vector-database",
+      "port": 3180,
+      "service": "vector-db",
+      "target": "azure-search",
+      "description": "Azure's enterprise vector search service",
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "ps-code-analyzer",
+      "name": "PowerShell Code Analyzer",
+      "type": "skill",
+      "domain": "code-analysis",
+      "port": 3191,
+      "service": "pi-coding-agent",
+      "action": "analyze",
+      "description": "Real-time code analysis and quality checks via PI Coding Agent",
+      "capabilities": [
+        "analysis",
+        "diagnostics",
+        "suggestions"
+      ],
+      "status": "ready",
+      "role": "execution"
+    },
+    {
+      "id": "ps-code-generator",
+      "name": "PowerShell Code Generator",
+      "type": "skill",
+      "domain": "code-generation",
+      "port": 3191,
+      "service": "pi-coding-agent",
+      "action": "generate",
+      "description": "AI-powered code generation via PI Coding Agent v2.0",
+      "capabilities": [
+        "generation",
+        "completion",
+        "boilerplate"
+      ],
+      "status": "ready",
+      "role": "execution"
+    },
+    {
+      "id": "ps-code-reviewer",
+      "name": "PowerShell Code Reviewer",
+      "type": "skill",
+      "domain": "code-review",
+      "port": 3191,
+      "service": "pi-coding-agent",
+      "action": "review",
+      "description": "AI code review and recommendations",
+      "capabilities": [
+        "review",
+        "suggestions",
+        "best-practices"
+      ],
+      "status": "ready",
+      "role": "execution"
+    },
+    {
+      "id": "ps-wave-trainer",
+      "name": "PowerShell Wave Trainer",
+      "type": "skill",
+      "domain": "training",
+      "port": 3191,
+      "service": "sh-wave-lattice",
+      "action": "train",
+      "description": "Wave function training and optimization via SH Wave Lattice",
+      "capabilities": [
+        "training",
+        "optimization",
+        "evolution"
+      ],
+      "status": "ready",
+      "role": "execution"
+    },
+    {
+      "id": "ps-wave-evolve",
+      "name": "PowerShell Evolution Engine",
+      "type": "skill",
+      "domain": "evolution",
+      "port": 3191,
+      "service": "sh-wave-lattice",
+      "action": "evolve",
+      "description": "Evolutionary optimization via SH Wave Lattice",
+      "capabilities": [
+        "evolution",
+        "adaptation",
+        "mutation"
+      ],
+      "status": "ready",
+      "role": "execution"
+    },
+    {
+      "id": "ps-ide-bridge",
+      "name": "PowerShell IDE Bridge",
+      "type": "skill",
+      "domain": "ide-integration",
+      "port": 3191,
+      "service": "studio-bridge",
+      "action": "intellisense",
+      "description": "Visual Studio integration and IDE events via Studio Bridge Runtime",
+      "capabilities": [
+        "intellisense",
+        "diagnostics",
+        "events"
+      ],
+      "status": "ready",
+      "role": "integration"
+    },
+    {
+      "id": "ps-code-formatter",
+      "name": "PowerShell Code Formatter",
+      "type": "skill",
+      "domain": "code-formatting",
+      "port": 3191,
+      "service": "studio-bridge",
+      "action": "format",
+      "description": "Code formatting and beautification via Studio Bridge",
+      "capabilities": [
+        "formatting",
+        "beautification",
+        "linting"
+      ],
+      "status": "ready",
+      "role": "execution"
+    },
+    {
+      "id": "ps-diagnostics",
+      "name": "PowerShell Diagnostics",
+      "type": "skill",
+      "domain": "diagnostics",
+      "port": 3191,
+      "service": "studio-bridge",
+      "action": "diagnose",
+      "description": "Code diagnostics and real-time error detection via Studio Bridge",
+      "capabilities": [
+        "diagnostics",
+        "error-detection",
+        "warnings"
+      ],
+      "status": "ready",
+      "role": "execution"
+    },
+    {
+      "id": "python-dotnet-bridge",
+      "type": "bridge",
+      "port": 25113,
+      "role": "integration",
+      "domain": "bridge",
+      "status": "operational",
+      "source": "python",
+      "target": "dotnet"
+    },
+    {
+      "id": "dotnet-runtime",
+      "type": "dotnet",
+      "port": 25114,
+      "role": "execution",
+      "domain": "dotnet",
+      "status": "operational"
+    }
+  ],
+  "routing": {
+    "domains": [
+      "coordinator",
+      "factory",
+      "responder",
+      "executor",
+      "manager",
+      "coder",
+      "planning",
+      "skills",
+      "research",
+      "memory",
+      "plans",
+      "ai-provider",
+      "vector-database",
+      "code-analysis",
+      "code-generation",
+      "code-review",
+      "training",
+      "evolution",
+      "ide-integration",
+      "code-formatting",
+      "diagnostics"
+    ],
+    "phase_mapping": {
+      "pop": "responder",
+      "wo": "planner",
+      "sek": "coder",
+      "chen": "executor",
+      "xul": "factory",
+      "ch'en": "manager",
+      "yax": "web-research",
+      "kan": "skills-router"
+    },
+    "layer_routes": {
+      "1->2": "model_weight_loading",
+      "2->3": "isa_generation",
+      "3->4": "field_creation",
+      "4->5": "gpu_dispatch",
+      "5->6": "result_routing",
+      "6->7": "skill_invocation"
+    }
+  },
+  "discovery": {
+    "method": "http",
+    "health_check_interval": 15000,
+    "timeout": 3000,
+    "retry_policy": {
+      "max_retries": 3,
+      "backoff_ms": 1000
+    }
+  },
+  "security": {
+    "authentication": "none",
+    "cors": {
+      "enabled": true,
+      "origins": [
+        "*"
+      ]
+    },
+    "ratelimit": {
+      "enabled": false
+    }
+  },
+  "skills": [
+    {
+      "id": ".system",
+      "name": ".System",
+      "role": "orchestration",
+      "type": "skill",
+      "domain": "system",
+      "description": ".System skill",
+      "status": "active",
+      "category": "system",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "system",
+        "system"
+      ]
+    },
+    {
+      "id": "agentic-micronaut",
+      "name": "Agentic Micronaut",
+      "role": "execution",
+      "type": "skill",
+      "domain": "agents",
+      "description": "Agentic Micronaut skill",
+      "status": "active",
+      "category": "agent",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "agent",
+        "agents"
+      ]
+    },
+    {
+      "id": "as-xcfe-stack-intel",
+      "name": "As Xcfe Stack Intel",
+      "role": "infrastructure",
+      "type": "skill",
+      "domain": "infrastructure",
+      "description": "As Xcfe Stack Intel skill",
+      "status": "active",
+      "category": "infrastructure",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "infrastructure",
+        "infrastructure"
+      ]
+    },
+    {
+      "id": "asx",
+      "name": "Asx",
+      "role": "infrastructure",
+      "type": "skill",
+      "domain": "infrastructure-3",
+      "description": "Asx skill",
+      "status": "active",
+      "category": "infrastructure",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "infrastructure",
+        "infrastructure"
+      ]
+    },
+    {
+      "id": "asx-verifier",
+      "name": "Asx Verifier",
+      "role": "infrastructure",
+      "type": "skill",
+      "domain": "infrastructure-4",
+      "description": "Asx Verifier skill",
+      "status": "active",
+      "category": "infrastructure",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "infrastructure",
+        "infrastructure"
+      ]
+    },
+    {
+      "id": "bot-builder",
+      "name": "Bot Builder",
+      "role": "orchestration",
+      "type": "skill",
+      "domain": "system-5",
+      "description": "Bot Builder skill",
+      "status": "active",
+      "category": "system",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "system",
+        "system"
+      ]
+    },
+    {
+      "id": "chatgpt-apps",
+      "name": "Chatgpt Apps",
+      "role": "integration",
+      "type": "skill",
+      "domain": "tools",
+      "description": "Chatgpt Apps skill",
+      "status": "active",
+      "category": "toolchain",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "toolchain",
+        "tools"
+      ]
+    },
+    {
+      "id": "cloudflare-deploy",
+      "name": "Cloudflare Deploy",
+      "role": "deployment",
+      "type": "skill",
+      "domain": "cloud",
+      "description": "Cloudflare Deploy skill",
+      "status": "active",
+      "category": "cloud",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "cloud",
+        "cloud"
+      ]
+    },
+    {
+      "id": "codex-agent",
+      "name": "Codex Agent",
+      "role": "execution",
+      "type": "skill",
+      "domain": "agents-8",
+      "description": "Codex Agent skill",
+      "status": "active",
+      "category": "agent",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "agent",
+        "agents"
+      ]
+    },
+    {
+      "id": "commands",
+      "name": "Commands",
+      "role": "orchestration",
+      "type": "skill",
+      "domain": "system-9",
+      "description": "Commands skill",
+      "status": "active",
+      "category": "system",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "system",
+        "system"
+      ]
+    },
+    {
+      "id": "dataset-training",
+      "name": "Dataset Training",
+      "role": "persistence",
+      "type": "skill",
+      "domain": "data",
+      "description": "Dataset Training skill",
+      "status": "active",
+      "category": "data",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "data",
+        "data"
+      ]
+    },
+    {
+      "id": "develop-web-game",
+      "name": "Develop Web Game",
+      "role": "analysis",
+      "type": "skill",
+      "domain": "dev-tools",
+      "description": "Develop Web Game skill",
+      "status": "active",
+      "category": "dev-tools",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "dev-tools",
+        "dev-tools"
+      ]
+    },
+    {
+      "id": "doc",
+      "name": "Doc",
+      "role": "integration",
+      "type": "skill",
+      "domain": "tools-12",
+      "description": "Doc skill",
+      "status": "active",
+      "category": "toolchain",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "toolchain",
+        "tools"
+      ]
+    },
+    {
+      "id": "figma",
+      "name": "Figma",
+      "role": "analysis",
+      "type": "skill",
+      "domain": "dev-tools-13",
+      "description": "Figma skill",
+      "status": "active",
+      "category": "dev-tools",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "dev-tools",
+        "dev-tools"
+      ]
+    },
+    {
+      "id": "figma-implement-design",
+      "name": "Figma Implement Design",
+      "role": "analysis",
+      "type": "skill",
+      "domain": "dev-tools-14",
+      "description": "Figma Implement Design skill",
+      "status": "active",
+      "category": "dev-tools",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "dev-tools",
+        "dev-tools"
+      ]
+    },
+    {
+      "id": "fxcop",
+      "name": "Fxcop",
+      "role": "transformation",
+      "type": "skill",
+      "domain": "build",
+      "description": "Fxcop skill",
+      "status": "active",
+      "category": "build",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "build",
+        "build"
+      ]
+    },
+    {
+      "id": "ktml",
+      "name": "Ktml",
+      "role": "infrastructure",
+      "type": "skill",
+      "domain": "infrastructure-16",
+      "description": "Ktml skill",
+      "status": "active",
+      "category": "infrastructure",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "infrastructure",
+        "infrastructure"
+      ]
+    },
+    {
+      "id": "kuhul",
+      "name": "Kuhul",
+      "role": "infrastructure",
+      "type": "skill",
+      "domain": "infrastructure-17",
+      "description": "Kuhul skill",
+      "status": "active",
+      "category": "infrastructure",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "infrastructure",
+        "infrastructure"
+      ]
+    },
+    {
+      "id": "kuhul-cpp-generator",
+      "name": "Kuhul Cpp Generator",
+      "role": "infrastructure",
+      "type": "skill",
+      "domain": "infrastructure-18",
+      "description": "Kuhul Cpp Generator skill",
+      "status": "active",
+      "category": "infrastructure",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "infrastructure",
+        "infrastructure"
+      ]
+    },
+    {
+      "id": "matrix-sandbox",
+      "name": "Matrix Sandbox",
+      "role": "infrastructure",
+      "type": "skill",
+      "domain": "infrastructure-19",
+      "description": "Matrix Sandbox skill",
+      "status": "active",
+      "category": "infrastructure",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "infrastructure",
+        "infrastructure"
+      ]
+    },
+    {
+      "id": "micronaut",
+      "name": "Micronaut",
+      "role": "agent",
+      "type": "skill",
+      "domain": "micronaut",
+      "description": "Micronaut skill",
+      "status": "active",
+      "category": "micronaut",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "micronaut",
+        "micronaut"
+      ]
+    },
+    {
+      "id": "micronaut-agent-factory",
+      "name": "Micronaut Agent Factory",
+      "role": "execution",
+      "type": "skill",
+      "domain": "agents-21",
+      "description": "Micronaut Agent Factory skill",
+      "status": "active",
+      "category": "agent",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "agent",
+        "agents"
+      ]
+    },
+    {
+      "id": "micronaut-builder-from-mx2",
+      "name": "Micronaut Builder From Mx2",
+      "role": "agent",
+      "type": "skill",
+      "domain": "micronaut-22",
+      "description": "Micronaut Builder From Mx2 skill",
+      "status": "active",
+      "category": "micronaut",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "micronaut",
+        "micronaut"
+      ]
+    },
+    {
+      "id": "micronaut-helper",
+      "name": "Micronaut Helper",
+      "role": "agent",
+      "type": "skill",
+      "domain": "micronaut-23",
+      "description": "Micronaut Helper skill",
+      "status": "active",
+      "category": "micronaut",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "micronaut",
+        "micronaut"
+      ]
+    },
+    {
+      "id": "micronaut-model",
+      "name": "Micronaut Model",
+      "role": "agent",
+      "type": "skill",
+      "domain": "micronaut-24",
+      "description": "Micronaut Model skill",
+      "status": "active",
+      "category": "micronaut",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "micronaut",
+        "micronaut"
+      ]
+    },
+    {
+      "id": "micronaut-tiles-skill",
+      "name": "Micronaut Tiles Skill",
+      "role": "agent",
+      "type": "skill",
+      "domain": "micronaut-25",
+      "description": "Micronaut Tiles Skill skill",
+      "status": "active",
+      "category": "micronaut",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "micronaut",
+        "micronaut"
+      ]
+    },
+    {
+      "id": "msbuild-nuget",
+      "name": "Msbuild Nuget",
+      "role": "transformation",
+      "type": "skill",
+      "domain": "build-26",
+      "description": "Msbuild Nuget skill",
+      "status": "active",
+      "category": "build",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "build",
+        "build"
+      ]
+    },
+    {
+      "id": "msbuild-pkgdef",
+      "name": "Msbuild Pkgdef",
+      "role": "transformation",
+      "type": "skill",
+      "domain": "build-27",
+      "description": "Msbuild Pkgdef skill",
+      "status": "active",
+      "category": "build",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "build",
+        "build"
+      ]
+    },
+    {
+      "id": "msodbcsql",
+      "name": "Msodbcsql",
+      "role": "integration",
+      "type": "skill",
+      "domain": "tools-28",
+      "description": "Msodbcsql skill",
+      "status": "active",
+      "category": "toolchain",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "toolchain",
+        "tools"
+      ]
+    },
+    {
+      "id": "msoledbsql",
+      "name": "Msoledbsql",
+      "role": "integration",
+      "type": "skill",
+      "domain": "tools-29",
+      "description": "Msoledbsql skill",
+      "status": "active",
+      "category": "toolchain",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "toolchain",
+        "tools"
+      ]
+    },
+    {
+      "id": "msvc-14-29",
+      "name": "Msvc 14 29",
+      "role": "transformation",
+      "type": "skill",
+      "domain": "build-30",
+      "description": "Msvc 14 29 skill",
+      "status": "active",
+      "category": "build",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "build",
+        "build"
+      ]
+    },
+    {
+      "id": "msvc-crt-src",
+      "name": "Msvc Crt Src",
+      "role": "transformation",
+      "type": "skill",
+      "domain": "build-31",
+      "description": "Msvc Crt Src skill",
+      "status": "active",
+      "category": "build",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "build",
+        "build"
+      ]
+    },
+    {
+      "id": "msvc-parallel-headers",
+      "name": "Msvc Parallel Headers",
+      "role": "transformation",
+      "type": "skill",
+      "domain": "build-32",
+      "description": "Msvc Parallel Headers skill",
+      "status": "active",
+      "category": "build",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "build",
+        "build"
+      ]
+    },
+    {
+      "id": "mx2lex",
+      "name": "Mx2lex",
+      "role": "agent",
+      "type": "skill",
+      "domain": "micronaut-33",
+      "description": "Mx2lex skill",
+      "status": "active",
+      "category": "micronaut",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "micronaut",
+        "micronaut"
+      ]
+    },
+    {
+      "id": "mx2lm-local-agent",
+      "name": "Mx2lm Local Agent",
+      "role": "execution",
+      "type": "skill",
+      "domain": "agents-34",
+      "description": "Mx2lm Local Agent skill",
+      "status": "active",
+      "category": "agent",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "agent",
+        "agents"
+      ]
+    },
+    {
+      "id": "netfx-sdk",
+      "name": "Netfx Sdk",
+      "role": "transformation",
+      "type": "skill",
+      "domain": "build-35",
+      "description": "Netfx Sdk skill",
+      "status": "active",
+      "category": "build",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "build",
+        "build"
+      ]
+    },
+    {
+      "id": "nuget-client",
+      "name": "Nuget Client",
+      "role": "transformation",
+      "type": "skill",
+      "domain": "build-36",
+      "description": "Nuget Client skill",
+      "status": "active",
+      "category": "build",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "build",
+        "build"
+      ]
+    },
+    {
+      "id": "page-inspector",
+      "name": "Page Inspector",
+      "role": "analysis",
+      "type": "skill",
+      "domain": "dev-tools-37",
+      "description": "Page Inspector skill",
+      "status": "active",
+      "category": "dev-tools",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "dev-tools",
+        "dev-tools"
+      ]
+    },
+    {
+      "id": "pipx-compiler",
+      "name": "Pipx Compiler",
+      "role": "integration",
+      "type": "skill",
+      "domain": "tools-38",
+      "description": "Pipx Compiler skill",
+      "status": "active",
+      "category": "toolchain",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "toolchain",
+        "tools"
+      ]
+    },
+    {
+      "id": "powershell-ise",
+      "name": "Powershell Ise",
+      "role": "integration",
+      "type": "skill",
+      "domain": "tools-39",
+      "description": "Powershell Ise skill",
+      "status": "active",
+      "category": "toolchain",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "toolchain",
+        "tools"
+      ]
+    },
+    {
+      "id": "powershell-terminal-app-builder",
+      "name": "Powershell Terminal App Builder",
+      "role": "analysis",
+      "type": "skill",
+      "domain": "dev-tools-40",
+      "description": "Powershell Terminal App Builder skill",
+      "status": "active",
+      "category": "dev-tools",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "dev-tools",
+        "dev-tools"
+      ]
+    },
+    {
+      "id": "project-factory",
+      "name": "Project Factory",
+      "role": "orchestration",
+      "type": "skill",
+      "domain": "system-41",
+      "description": "Project Factory skill",
+      "status": "active",
+      "category": "system",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "system",
+        "system"
+      ]
+    },
+    {
+      "id": "ptvs-build",
+      "name": "Ptvs Build",
+      "role": "transformation",
+      "type": "skill",
+      "domain": "build-42",
+      "description": "Ptvs Build skill",
+      "status": "active",
+      "category": "build",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "build",
+        "build"
+      ]
+    },
+    {
+      "id": "scx2-runtime",
+      "name": "Scx2 Runtime",
+      "role": "agent",
+      "type": "skill",
+      "domain": "micronaut-43",
+      "description": "Scx2 Runtime skill",
+      "status": "active",
+      "category": "micronaut",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "micronaut",
+        "micronaut"
+      ]
+    },
+    {
+      "id": "scxq2-vector",
+      "name": "Scxq2 Vector",
+      "role": "agent",
+      "type": "skill",
+      "domain": "micronaut-44",
+      "description": "Scxq2 Vector skill",
+      "status": "active",
+      "category": "micronaut",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "micronaut",
+        "micronaut"
+      ]
+    },
+    {
+      "id": "scxqdds",
+      "name": "Scxqdds",
+      "role": "persistence",
+      "type": "skill",
+      "domain": "data-45",
+      "description": "Scxqdds skill",
+      "status": "active",
+      "category": "data",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "data",
+        "data"
+      ]
+    },
+    {
+      "id": "sk-coordinator",
+      "name": "Sk Coordinator",
+      "role": "integration",
+      "type": "skill",
+      "domain": "tools-46",
+      "description": "Sk Coordinator skill",
+      "status": "active",
+      "category": "toolchain",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "toolchain",
+        "tools"
+      ]
+    },
+    {
+      "id": "snipping-tool",
+      "name": "Snipping Tool",
+      "role": "integration",
+      "type": "skill",
+      "domain": "tools-47",
+      "description": "Snipping Tool skill",
+      "status": "active",
+      "category": "toolchain",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "toolchain",
+        "tools"
+      ]
+    },
+    {
+      "id": "sql-skill",
+      "name": "Sql Skill",
+      "role": "deployment",
+      "type": "skill",
+      "domain": "cloud-48",
+      "description": "Sql Skill skill",
+      "status": "active",
+      "category": "cloud",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "cloud",
+        "cloud"
+      ]
+    },
+    {
+      "id": "sqlite3",
+      "name": "Sqlite3",
+      "role": "integration",
+      "type": "skill",
+      "domain": "tools-49",
+      "description": "Sqlite3 skill",
+      "status": "active",
+      "category": "toolchain",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "toolchain",
+        "tools"
+      ]
+    },
+    {
+      "id": "steps-recorder",
+      "name": "Steps Recorder",
+      "role": "skill",
+      "type": "skill",
+      "domain": "steps-recorder",
+      "description": "Steps Recorder skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "steps-recorder"
+      ]
+    },
+    {
+      "id": "supernaut",
+      "name": "Supernaut",
+      "role": "skill",
+      "type": "skill",
+      "domain": "supernaut",
+      "description": "Supernaut skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "supernaut"
+      ]
+    },
+    {
+      "id": "table-text-service",
+      "name": "Table Text Service",
+      "role": "skill",
+      "type": "skill",
+      "domain": "table-text-service",
+      "description": "Table Text Service skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "table-text-service"
+      ]
+    },
+    {
+      "id": "team-lead",
+      "name": "Team Lead",
+      "role": "skill",
+      "type": "skill",
+      "domain": "team-lead",
+      "description": "Team Lead skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "team-lead"
+      ]
+    },
+    {
+      "id": "voice-tts",
+      "name": "Voice Tts",
+      "role": "skill",
+      "type": "skill",
+      "domain": "voice-tts",
+      "description": "Voice Tts skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "voice-tts"
+      ]
+    },
+    {
+      "id": "vs-insiders",
+      "name": "Vs Insiders",
+      "role": "skill",
+      "type": "skill",
+      "domain": "vs-insiders",
+      "description": "Vs Insiders skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "vs-insiders"
+      ]
+    },
+    {
+      "id": "vs-native-tools",
+      "name": "Vs Native Tools",
+      "role": "skill",
+      "type": "skill",
+      "domain": "vs-native-tools",
+      "description": "Vs Native Tools skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "vs-native-tools"
+      ]
+    },
+    {
+      "id": "vs2019-tools",
+      "name": "Vs2019 Tools",
+      "role": "skill",
+      "type": "skill",
+      "domain": "vs2019-tools",
+      "description": "Vs2019 Tools skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "vs2019-tools"
+      ]
+    },
+    {
+      "id": "vs2022-tools",
+      "name": "Vs2022 Tools",
+      "role": "skill",
+      "type": "skill",
+      "domain": "vs2022-tools",
+      "description": "Vs2022 Tools skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "vs2022-tools"
+      ]
+    },
+    {
+      "id": "vsdevcmd",
+      "name": "Vsdevcmd",
+      "role": "skill",
+      "type": "skill",
+      "domain": "vsdevcmd",
+      "description": "Vsdevcmd skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "vsdevcmd"
+      ]
+    },
+    {
+      "id": "windows-sdk",
+      "name": "Windows Sdk",
+      "role": "skill",
+      "type": "skill",
+      "domain": "windows-sdk",
+      "description": "Windows Sdk skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "windows-sdk"
+      ]
+    },
+    {
+      "id": "winkit-81",
+      "name": "Winkit 81",
+      "role": "skill",
+      "type": "skill",
+      "domain": "winkit-81",
+      "description": "Winkit 81 skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "winkit-81"
+      ]
+    },
+    {
+      "id": "wordpad",
+      "name": "Wordpad",
+      "role": "skill",
+      "type": "skill",
+      "domain": "wordpad",
+      "description": "Wordpad skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "wordpad"
+      ]
+    },
+    {
+      "id": "workflow-orchestrator",
+      "name": "Workflow Orchestrator",
+      "role": "skill",
+      "type": "skill",
+      "domain": "workflow-orchestrator",
+      "description": "Workflow Orchestrator skill",
+      "status": "active",
+      "category": "unknown",
+      "dependencies": [],
+      "endpoints": [
+        "GET /health",
+        "POST /invoke",
+        "GET /metadata"
+      ],
+      "tags": [
+        "unknown",
+        "workflow-orchestrator"
+      ]
+    }
+  ],
+  "skill_orchestration": {
+    "total_skills": 64,
+    "categories": {
+      "system": [
+        ".system",
+        "project-factory",
+        "bot-builder",
+        "skill-runner",
+        "commands"
+      ],
+      "agent": [
+        "agentic-micronaut",
+        "agent-factory",
+        "codex-agent",
+        "mx2lm-local-agent",
+        "micronaut-agent-factory"
+      ],
+      "micronaut": [
+        "micronaut",
+        "micronaut-model",
+        "micronaut-helper",
+        "micronaut-tiles-skill",
+        "micronaut-builder-from-mx2",
+        "scx2-runtime",
+        "scxq2-vector",
+        "scxqdds",
+        "mx2lex"
+      ],
+      "build": [
+        "msbuild-nuget",
+        "msbuild-pkgdef",
+        "fxcop",
+        "ptvs-build",
+        "msvc-14-29",
+        "msvc-crt-src",
+        "msvc-parallel-headers",
+        "netfx-sdk",
+        "nuget-client"
+      ],
+      "cloud": [
+        "cloudflare-deploy",
+        "sql-skill"
+      ],
+      "data": [
+        "dataset-training",
+        "scxqdds"
+      ],
+      "dev-tools": [
+        "figma",
+        "figma-implement-design",
+        "develop-web-game",
+        "page-inspector",
+        "powershell-terminal-app-builder"
+      ],
+      "infrastructure": [
+        "ktml",
+        "kuhul",
+        "kuhul-cpp-generator",
+        "matrix-sandbox",
+        "as-xcfe-stack-intel",
+        "asx",
+        "asx-verifier"
+      ],
+      "toolchain": [
+        "msoledbsql",
+        "msodbcsql",
+        "pipx-compiler",
+        "powershell-ise",
+        "sk-coordinator",
+        "snipping-tool",
+        "sqlite3",
+        "chatgpt-apps",
+        "doc"
+      ]
+    },
+    "routing_rules": {
+      "system": 4,
+      "agents": 4,
+      "infrastructure": 7,
+      "tools": 9,
+      "cloud": 2,
+      "data": 2,
+      "dev-tools": 5,
+      "build": 9,
+      "micronaut": 8,
+      "steps-recorder": 1,
+      "supernaut": 1,
+      "table-text-service": 1,
+      "team-lead": 1,
+      "voice-tts": 1,
+      "vs-insiders": 1,
+      "vs-native-tools": 1,
+      "vs2019-tools": 1,
+      "vs2022-tools": 1,
+      "vsdevcmd": 1,
+      "windows-sdk": 1,
+      "winkit-81": 1,
+      "wordpad": 1,
+      "workflow-orchestrator": 1
+    }
+  },
+  "models": [],
+  "agents": [],
+  "entry_points": {},
+  "endpoints": [],
+  "layers": {
+    "layer1": {
+      "name": "Model Weights",
+      "status": "complete",
+      "models": 0
+    },
+    "layer2": {
+      "name": "Native Runtime",
+      "status": "partial",
+      "frameworks": [
+        "dotnet",
+        "powershell",
+        "python"
+      ]
+    },
+    "layer3": {
+      "name": "Tensor & ISA",
+      "status": "partial",
+      "components": [
+        "scxq2",
+        "isa_definitions",
+        "quantization"
+      ],
+      "lanes": [
+        "lane_0_int4",
+        "lane_1_q8",
+        "lane_2_fp32",
+        "lane_3_expert_moe"
+      ]
+    },
+    "layer4": {
+      "name": "Semantic Fields",
+      "status": "complete",
+      "field_types": [
+        "phase_topology",
+        "geodesic_tensor",
+        "entropy_field"
+      ],
+      "phases": [
+        "Pop",
+        "Wo",
+        "Sek",
+        "Chen",
+        "Xul"
+      ],
+      "phase_topology": {
+        "Pop": "Foundation phase",
+        "Wo": "Observation phase",
+        "Sek": "Selection phase",
+        "Chen": "Computation phase",
+        "Xul": "Unified phase"
+      }
+    },
+    "layer5": {
+      "name": "GPU Execution",
+      "status": "complete",
+      "shaders": 3,
+      "throughput": "100x CPU potential"
+    },
+    "layer6": {
+      "name": "Framework Bridges",
+      "status": "complete",
+      "bridges": 3
+    },
+    "layer7": {
+      "name": "Agent/Skill Orchestration",
+      "status": "complete",
+      "services": 88,
+      "skills": 64,
+      "agents": 0,
+      "type": "skill_orchestration",
+      "components": [
+        "skill_discovery",
+        "skill_invocation",
+        "skill_chaining"
+      ]
+    }
+  },
+  "validation": {
+    "checksums": {},
+    "dependencies": {},
+    "circular_refs": []
+  },
+  "consolidation": {
+    "version": "2.0.0",
+    "consolidated_at": "2026-05-16T19:12:08.876Z",
+    "source_registries": 9,
+    "merged_items": 0,
+    "total_services": 88,
+    "total_skills": 64,
+    "total_agents": 0,
+    "total_models": 0
+  }
+}

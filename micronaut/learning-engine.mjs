@@ -7,9 +7,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PORT = 25110;
+const PORT = 25121;
 const COORDINATOR = 'http://127.0.0.1:25100';
-const HARVESTER   = 'http://127.0.0.1:25109';
+const HARVESTER   = 'http://127.0.0.1:25120';
 
 const TRAINER_SCRIPT = path.join(
   __dirname, '..', 'releases', 'v3.5.0-WebX',
