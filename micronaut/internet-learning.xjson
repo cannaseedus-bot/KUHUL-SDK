@@ -11,7 +11,7 @@
   "kernel_processes": {
     "data_harvester": {
       "script":     "micronaut/data-harvester.mjs",
-      "port":       25120,
+      "port":       25301,
       "type":       "autonomous_url_loader",
       "fold":       "⟁COMPUTE_FOLD⟁",
       "lane":       "BATCH",
@@ -21,7 +21,7 @@
     },
     "learning_engine": {
       "script":     "micronaut/learning-engine.mjs",
-      "port":       25121,
+      "port":       25302,
       "type":       "continuous_training_pipeline",
       "fold":       "⟁COMPUTE_FOLD⟁",
       "lane":       "BATCH",

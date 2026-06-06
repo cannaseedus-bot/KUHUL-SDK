@@ -78,8 +78,8 @@ All three are `MM-1` variants (token_signal_generator, `⟁COMPUTE_FOLD⟁`) fro
 | Splash / UI | 25200 |
 | Micronauts 1-8 | 25101–25108 |
 | Node services (queue, breaker, etc.) | 25109–25118 |
-| Data Harvester | 25120 |
-| Learning Engine | 25121 |
+| Data Harvester | 25301 |
+| Learning Engine | 25302 |
 
 All ports are fixed. Services must register with Coordinator via `POST /register` before routing.
 

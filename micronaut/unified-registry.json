@@ -32,7 +32,7 @@
     "data_harvester": {
       "id": "data-harvester",
       "name": "Data Harvester",
-      "port": 25120,
+      "port": 25301,
       "role": "internet_learning",
       "description": "Autonomous URL loader — fetches GitHub, StackOverflow, arXiv, HuggingFace, Wikipedia for MM-CODER training",
       "type": "kernel_process",
@@ -50,7 +50,7 @@
     "learning_engine": {
       "id": "learning-engine",
       "name": "Learning Engine",
-      "port": 25121,
+      "port": 25302,
       "role": "internet_learning",
       "description": "Continuous training pipeline — spawns internet_harvester.py, hot-swaps MM-CODER model checkpoint",
       "type": "kernel_process",
@@ -694,7 +694,7 @@
       "description": "K'UHUL semantic planning",
       "startup_order": 3,
       "status": "stable",
-      "port": 25120,
+      "port": 25301,
       "dependencies": [
         "coordinator"
       ],
@@ -715,7 +715,7 @@
       "description": "Shader compilation",
       "startup_order": 3,
       "status": "stable",
-      "port": 25121,
+      "port": 25302,
       "dependencies": [
         "coordinator"
       ],
