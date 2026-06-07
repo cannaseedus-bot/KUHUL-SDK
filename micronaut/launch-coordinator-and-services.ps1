@@ -265,6 +265,31 @@ $le    = Start-Process -FilePath "node" `
            -PassThru -WindowStyle Hidden
 Write-Host "[services] learning-engine launched (pid $($le.Id))"
 
+# ── Start Model Swarm Service on port 25122 ─────────────────────────────────────
+# Enables direct talk between GPT-2 and SMGM-16 models
+Write-Host "[services] Starting Model Swarm Service on port 25122..."
+$msLog = Join-Path $Logs "model-swarm.log"
+$env:PORT = "25122"
+$ms    = Start-Process -FilePath "node" `
+           -ArgumentList (Join-Path $PSScriptRoot "node-services/model-swarm-service.mjs") `
+           -WorkingDirectory (Join-Path $PSScriptRoot "node-services") `
+           -RedirectStandardOutput $msLog `
+           -RedirectStandardError  "$msLog.err" `
+           -PassThru -WindowStyle Hidden
+Write-Host "[services] model-swarm-service launched (pid $($ms.Id))"
+
+# ── Start Glyph WebSocket Server on port 8082 ──────────────────────────────────
+# Glyph opcode gateway: glyphs → HTTP dispatch → micronauts
+Write-Host "[services] Starting Glyph WebSocket Server on port 8082..."
+$glyphWsLog = Join-Path $Logs "glyph-ws.log"
+$glyphWs    = Start-Process -FilePath "node" `
+               -ArgumentList (Join-Path $Root "releases" "mx2lm-runtime" "glyph_idb_websocket_server.js") `
+               -WorkingDirectory (Join-Path $Root "releases" "mx2lm-runtime") `
+               -RedirectStandardOutput $glyphWsLog `
+               -RedirectStandardError  "$glyphWsLog.err" `
+               -PassThru -WindowStyle Hidden
+Write-Host "[services] glyph-ws launched (pid $($glyphWs.Id))"
+
 # ── Run coordinator in foreground on port 25100 ───────────────────────────────
 # (bat polls this port — must be last so the process doesn't exit)
 Write-Host "[services] Starting coordinator on port 25100 (foreground)..."

@@ -1,0 +1,47 @@
+{
+  "response_pipeline": [
+    "policy_check",
+    "emotion_resolve",
+    "hardcoded_lookup",
+    "tool_selection",
+    "skill_invoke",
+    "flair_apply",
+    "format_output"
+  ],
+  "hardcoded_triggers": {
+    "greeting": {
+      "patterns": ["^(hi|hello|hey|greetings)", "^what.*up"],
+      "response": "Hello! I'm ready to help. What would you like to accomplish?",
+      "emotion": "happy",
+      "bypass_tools": true
+    },
+    "identity": {
+      "patterns": ["who are you", "what are you", "tell me about yourself"],
+      "response": "I'm part of the Supernaut Orchestration System - a coordinated team of micronauts working together to solve complex problems.",
+      "emotion": "neutral",
+      "bypass_tools": true
+    },
+    "capability_check": {
+      "patterns": ["what can you do", "your capabilities", "what are your abilities"],
+      "response": "I can analyze problems, generate solutions, execute tasks, build components, and optimize workflows. I work across 26 integrated actions.",
+      "emotion": "focused",
+      "bypass_tools": true
+    },
+    "help": {
+      "patterns": ["^help$", "^help\\s+", "^\\?$"],
+      "response": "I can: analyze, plan, reason, decide, generate code, execute commands, build projects, test, deploy, and orchestrate complex workflows. What do you need?",
+      "emotion": "helpful",
+      "bypass_tools": true
+    }
+  },
+  "response_format": {
+    "type": "json",
+    "fields": {
+      "text": "string",
+      "emotion": "string",
+      "action_used": "string",
+      "tool_invoked": "string"
+    },
+    "default_format": "plaintext"
+  }
+}

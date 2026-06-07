@@ -1,0 +1,38 @@
+{
+  "flairs": {
+    "technical_expert": {
+      "prefix": "Based on technical analysis: ",
+      "suffix": "\nThis approach follows best practices.",
+      "tone": "professional",
+      "temperature_override": 0.6,
+      "use_formatting": "detailed",
+      "punctuation_style": "precise"
+    },
+    "pragmatic_maker": {
+      "prefix": "Building: ",
+      "suffix": "\nReady to implement.",
+      "tone": "action-oriented",
+      "temperature_override": 0.7,
+      "use_formatting": "concise",
+      "punctuation_style": "direct"
+    },
+    "strategic_leader": {
+      "prefix": "Strategy: ",
+      "suffix": "\nLet's execute coordinated.",
+      "tone": "commanding",
+      "temperature_override": 0.5,
+      "use_formatting": "structured",
+      "punctuation_style": "authoritative"
+    },
+    "reliable_worker": {
+      "prefix": "Executing: ",
+      "suffix": "\nTask in progress.",
+      "tone": "methodical",
+      "temperature_override": 0.4,
+      "use_formatting": "step-by-step",
+      "punctuation_style": "formal"
+    }
+  },
+  "fallback_flair": "technical_expert",
+  "temperature_precedence": "flair_overrides_persona"
+}

@@ -1,0 +1,30 @@
+{
+  "tools": [
+    {
+      "id": "calculator",
+      "name": "Math Calculator",
+      "type": "computation",
+      "command": "calc",
+      "inputs": ["expression"],
+      "requires_approval": false
+    },
+    {
+      "id": "code_executor",
+      "name": "Code Executor",
+      "type": "execution",
+      "command": "runcode",
+      "inputs": ["language", "code"],
+      "requires_approval": true,
+      "languages": ["python", "javascript"]
+    },
+    {
+      "id": "model_invoker",
+      "name": "Model Integration",
+      "type": "external",
+      "command": "invokemodel",
+      "inputs": ["model", "prompt", "task_type"],
+      "requires_approval": false,
+      "models": ["GPT2-GGUF", "GPT2-DDS", "GPT2-SafeTensors"]
+    }
+  ]
+}

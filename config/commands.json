@@ -1,0 +1,24 @@
+{
+  "commands": {
+    "/reset": {
+      "description": "Reset conversation state",
+      "effect": "clears_memory"
+    },
+    "/set_flair": {
+      "description": "Change response flair",
+      "usage": "/set_flair {flair_id}",
+      "valid_flairs": ["technical_expert", "pragmatic_maker", "strategic_leader", "reliable_worker"]
+    },
+    "/list_actions": {
+      "description": "List all available actions",
+      "returns": "array"
+    },
+    "/status": {
+      "description": "Show system status",
+      "fields": ["online_services", "model_status"]
+    },
+    "/help": {
+      "description": "Show available commands"
+    }
+  }
+}

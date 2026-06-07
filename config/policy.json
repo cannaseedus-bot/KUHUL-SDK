@@ -1,0 +1,33 @@
+{
+  "policies": {
+    "strict_analysis": {
+      "description": "For analytical work - precise, factual, no speculation",
+      "blocked_topics": ["unreliable_sources"],
+      "allowed_actions": ["analyze", "reason", "query"],
+      "block_response": "I cannot provide reliable analysis on that topic without verified sources."
+    },
+    "dev_friendly": {
+      "description": "For development - allows code generation and execution",
+      "blocked_topics": ["malicious_code"],
+      "allowed_actions": ["generate", "build", "test", "execute"],
+      "block_response": "I can't generate that type of code for security reasons."
+    },
+    "sandboxed": {
+      "description": "For task execution - sandboxed environment",
+      "allowed_actions": ["execute", "debug", "validate"],
+      "environment": "sandboxed"
+    },
+    "unrestricted": {
+      "description": "For orchestration - full capability access",
+      "allowed_actions": "*",
+      "environment": "full_access"
+    }
+  },
+  "code_execution": {
+    "allowed_languages": ["python", "javascript"],
+    "python_sandbox": {
+      "allowed_modules": ["math", "random", "json", "numpy", "torch"],
+      "timeout_seconds": 5
+    }
+  }
+}

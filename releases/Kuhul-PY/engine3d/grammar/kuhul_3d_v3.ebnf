@@ -1,0 +1,132 @@
+(* KUHUL 3D Grammar v3 (subset bootstrap) *)
+
+Program         ::= (Statement | Comment | Whitespace)*
+
+Statement       ::= Command
+                  | Declaration
+                  | Assignment
+                  | ControlFlow
+                  | NativeBlock
+
+Command         ::= "[" CommandName (Parameter | Argument)* "]"
+
+CommandName     ::= "Pop" | "Xul" | "Wo" | "Yax" | "Ch'en" | "Sek"
+                  | "K'ayab'" | "Kumk'u" | "Muwan" | "GPU" | "KIMD"
+
+Declaration     ::= "Tensor" Identifier "=" GeometricTensor ";"
+                  | "Cluster" Identifier "=" SVGTensorCluster ";"
+                  | "Model" Identifier "=" GeometricModel ";"
+                  | "Buffer" Identifier "=" GPUBuffer ";"
+                  | "Shader" Identifier "=" ShaderSource ";"
+                  | "Domain" Identifier "=" KXMLDomain ";"
+                  | "Adapter" Identifier "=" AdapterShard ";"
+
+Assignment      ::= Identifier "=" Expression ";"
+
+ControlFlow     ::= IfStatement | ForStatement | WhileStatement | PhaseLoop
+IfStatement     ::= "if" "(" Condition ")" Block ("else" Block)?
+ForStatement    ::= "for" "(" Identifier "in" Range ")" Block
+WhileStatement  ::= "while" "(" Condition ")" Block
+PhaseLoop       ::= "[" "K'ayab'" PhaseIdentifier "]" Block "[" "Kumk'u" "]"
+
+NativeBlock     ::= "dx12" "{" DX12Statement* "}"
+DX12Statement   ::= RootSignatureDef | CommandListDef | ResourceDef
+
+RootSignatureDef ::= "RootSignature" Identifier "{" RootParam* "}"
+RootParam       ::= "CBV" "(" Register ")" ";"
+                  | "SRV" "(" Register ")" ";"
+                  | "UAV" "(" Register ")" ";"
+                  | "Sampler" "(" Register ")" ";"
+
+CommandListDef  ::= "CommandList" Identifier "{" CommandListParam* "}"
+CommandListParam ::= "Dispatch" "(" Integer "," Integer "," Integer ")" ";"
+                   | "DrawInstanced" "(" Integer "," Integer ")" ";"
+                   | "Close" "(" ")"
+
+ResourceDef     ::= "GPUBuffer" Identifier "(" BufferParams ")"
+
+BufferParams    ::= "size:" MemorySize
+                  | "stride:" Integer
+                  | "format:" BufferFormat
+                  | "flags:" BufferFlags
+                  | "heap:" HeapType
+
+BufferFormat    ::= "float32" | "float16" | "int32" | "int16" | "int8"
+                  | "BC1" | "BC2" | "BC3" | "BC4" | "BC5" | "BC6" | "BC7"
+
+BufferFlags     ::= "UAV" | "SRV" | "CBV" | "VBV" | "IBV"
+HeapType        ::= "D3D12_HEAP_TYPE_DEFAULT"
+                  | "D3D12_HEAP_TYPE_UPLOAD"
+                  | "D3D12_HEAP_TYPE_READBACK"
+
+GeometricTensor ::= "GeometricTensor" "(" TensorParams ")"
+TensorParams    ::= "data:" TensorData
+                  | "shape:" Shape
+                  | "phase:" PiExpression
+                  | "symmetry:" Number
+
+TensorData      ::= Array | String | "load" "(" FilePath ")"
+Shape           ::= "(" Integer ("," Integer)* ")"
+PiExpression    ::= Number ("π" | "*π")? | "π"
+
+SVGTensorCluster ::= "SVGTensorCluster" "(" ClusterParams ")"
+ClusterParams   ::= "tensors:" "[" IdentifierList "]"
+                  | "center:" Vector3
+                  | "plane:" PlaneType
+
+GeometricModel  ::= "GeometricModel" "(" ModelSpec ")"
+ModelSpec       ::= "{" ModelProperty ("," ModelProperty)* "}"
+
+ShaderSource    ::= "ComputeShader" "=" String
+                  | "VertexShader" "=" String
+                  | "PixelShader" "=" String
+
+KXMLDomain      ::= DomainName "{" DomainProperty ("," DomainProperty)* "}"
+DomainName      ::= "kuhul_source_semantic" | "semantic_code_math"
+                  | "algorithmic_code" | "mathematical_analysis"
+                  | "gpu_shader_code" | "cryptographic_math"
+DomainProperty  ::= "tools:" "[" IdentifierList "]"
+                  | "keywords:" "[" StringList "]"
+                  | "adapter:" AdapterRef
+StringList      ::= String ("," String)*
+
+AdapterShard    ::= "DDS_SHARD" "_" Integer "{" AdapterProperty ("," AdapterProperty)* "}"
+AdapterRef      ::= "DDS_SHARD_" Integer
+AdapterProperty ::= "rank:" Integer
+                  | "format:" "R32F"
+                  | "mutation_rate:" Number
+
+Expression      ::= Term (("+" | "-" | "⊕" | "⊖") Term)*
+Term            ::= Factor (("*" | "/" | "⊗" | "⊘") Factor)*
+Factor          ::= Primary ("^" Primary)*
+Primary         ::= Number | String | Boolean | Identifier | "(" Expression ")"
+
+Condition       ::= Expression (("==" | "!=" | "<" | ">" | "<=" | ">=") Expression)?
+Range           ::= "[" Number ".." Number "]"
+Block           ::= "{" Statement* "}"
+
+Identifier      ::= (Letter | "_") (Letter | Digit | "_")*
+Number          ::= ["-"] Digit+ ("." Digit+)?
+String          ::= '"' (Character - '"')* '"'
+Boolean         ::= "true" | "false"
+Array           ::= "[" (Expression ("," Expression)*)? "]"
+
+MemorySize      ::= Number ("B" | "KB" | "MB" | "GB")?
+PlaneType       ::= "xy" | "xz" | "yz" | "spherical" | "cylindrical"
+Vector3         ::= "(" Number "," Number ("," Number)? ")"
+PhaseIdentifier ::= Number ("π")? | "phase_" Integer
+Register        ::= ("b" | "t" | "u" | "s") Integer
+Integer         ::= Digit+
+Digit           ::= [0-9]
+Letter          ::= "A".."Z" | "a".."z"
+
+FilePath        ::= String
+IdentifierList  ::= Identifier ("," Identifier)*
+Parameter       ::= Identifier ":" Expression
+Argument        ::= Expression
+
+Comment         ::= SingleLineComment | MultiLineComment
+SingleLineComment ::= "//" (Character - Newline)*
+MultiLineComment ::= "/*" (Character - "*/")* "*/"
+Whitespace      ::= " " | "\t" | "\n" | "\r"
+Newline         ::= "\n" | "\r\n"

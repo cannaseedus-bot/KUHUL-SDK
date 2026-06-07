@@ -1,0 +1,55 @@
+// gpt2_adam.hlsl — GPU Adam optimizer update
+// Dispatch(ceil(numel/256), 1, 1)
+// cs_5_0 compatible (D3D11 compute)
+
+cbuffer AdamParams : register(b0) {
+    float lr;
+    float beta1;
+    float beta2;
+    float eps;
+    float weight_decay;
+    float bias_corr1;   // 1 / (1 - beta1^t)
+    float bias_corr2;   // 1 / (1 - beta2^t)
+    uint  numel;
+};
+
+RWStructuredBuffer<float> weights : register(u0);
+RWStructuredBuffer<float> grads   : register(u1);
+RWStructuredBuffer<float> m       : register(u2);   // first moment
+RWStructuredBuffer<float> v       : register(u3);   // second moment
+
+[numthreads(256, 1, 1)]
+void CSMain(uint3 tid : SV_DispatchThreadID) {
+    const uint i = tid.x;
+    if (i >= numel) return;
+
+    float g = grads[i];
+
+    // L2 weight decay — disabled: applied to untrained params (c_attn, wpe) which have no gradient,
+    // causing them to drift toward 0 and destabilize later layers.
+    // g += weight_decay * weights[i];
+
+    // Moment updates (EMA)
+    const float mi = beta1 * m[i] + (1.0f - beta1) * g;
+    const float vi = beta2 * v[i] + (1.0f - beta2) * g * g;
+    m[i] = mi;
+    v[i] = vi;
+
+    // Bias-corrected update
+    const float m_hat = mi * bias_corr1;
+    const float v_hat = vi * bias_corr2;
+
+    const float delta = lr * m_hat / (sqrt(v_hat) + eps);
+
+    // NaN/Inf guard: if the update is invalid (NaN gradient contaminated the moments),
+    // reset the moments and leave the weight unchanged rather than writing NaN to it.
+    if (isnan(delta) || isinf(delta)) {
+        m[i] = 0.0f;
+        v[i] = 0.0f;
+    } else {
+        weights[i] -= delta;
+    }
+
+    // Zero gradient for next step
+    grads[i] = 0.0f;
+}

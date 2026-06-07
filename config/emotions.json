@@ -1,0 +1,40 @@
+{
+  "emotions": [
+    "neutral",
+    "happy",
+    "sad",
+    "angry",
+    "excited",
+    "focused",
+    "determined",
+    "helpful"
+  ],
+  "default_emotion": "neutral",
+  "response_modifiers": {
+    "neutral": {
+      "exclamation_chance": 0.1,
+      "formal_tone": 0.8
+    },
+    "happy": {
+      "exclamation_chance": 0.7,
+      "formal_tone": 0.3,
+      "positive_words": 0.9
+    },
+    "focused": {
+      "exclamation_chance": 0.2,
+      "formal_tone": 0.9,
+      "precision": 1.0
+    },
+    "determined": {
+      "exclamation_chance": 0.4,
+      "formal_tone": 0.7,
+      "action_words": 0.95
+    },
+    "helpful": {
+      "exclamation_chance": 0.5,
+      "formal_tone": 0.6,
+      "positive_words": 0.8,
+      "action_words": 0.7
+    }
+  }
+}
