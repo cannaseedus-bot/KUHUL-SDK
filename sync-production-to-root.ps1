@@ -9,7 +9,7 @@ param(
 
 $ErrorActionPreference = "Continue"
 
-$PROD_DIR = "releases\kuhul-v1.0.0-production"
+$PROD_DIR = "releases\KUHUL-SDK"
 $ROOT_DIR = "."
 
 Write-Host "╔════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
